@@ -1,0 +1,48 @@
+body {
+  background-color: #eee;
+}
+
+
+.toggle-box {
+  position: relative;
+  width:300px;
+  margin:0 auto 20px;
+  background-color: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,.2);
+}
+.toggle-box.toggle-box-animating {
+  overflow: hidden;
+}
+.state {
+  box-sizing: border-box;
+  padding:20px;
+}
+.toggle-box.toggle-box-animating .state {
+  position: absolute;
+  top:0;
+}
+.toggle-box .state {
+  position: relative;
+}
+
+
+.toggle-box .state-hide {
+  position: absolute;
+  left:-3000px;
+}
+
+.toggle-box.toggle-box-animating {
+  transition: all .2s ease-in-out;
+}
+.toggle-box.toggle-box-animating .state {
+  transition: all .2s ease-in-out;
+}
+.toggle-box .state {
+  transition: all .2s ease-in-out;
+}
+.toggle-box .state-show {
+  opacity: 1;
+}
+.toggle-box .state-hide {
+  opacity: 0;
+}

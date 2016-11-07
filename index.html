@@ -1,0 +1,17 @@
+<script src="bundle.js"></script>
+
+<div id="cool" class="toggle-box">
+  <div class="state" data-state-name="first">
+    <p>Jonny</p>
+    <button data-state-trigger="second">Edit</button>
+  </div>
+  <div class="state" data-state-name="second">
+    <label>Name</label>
+    <input type="text" value="Jonny"/>
+    <button data-state-trigger="first">Save</button>
+  </div>
+</div>
+
+<script>
+  new Switch('cool');
+</script>
