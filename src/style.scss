@@ -37,13 +37,12 @@ body {
     &.state-next {
       transform: translateY(-70px);
       &.state-show {
-        //transition: all .4s ease-in-out .2s;
         transition-delay: .2s;
         transform: translateY(0);
       }
     }
     &.state-previous {
-      transform: translateY(70px);
+      transform: translateY(-70px);
     }
   }
 }
