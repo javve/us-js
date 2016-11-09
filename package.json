@@ -13,7 +13,9 @@
     "css-loader": "^0.25.0",
     "mocha": "^3.1.2",
     "mocha-loader": "^1.0.0",
+    "node-sass": "^3.11.2",
     "object-assign": "^4.1.0",
+    "sass-loader": "^4.0.2",
     "style-loader": "^0.13.1",
     "webpack": "^1.13.3",
     "webpack-dev-server": "^1.16.2"

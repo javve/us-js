@@ -1,4 +1,4 @@
-require('./style.css');
+require('./style.scss');
 
 const assign = require('object-assign'),
       states = require('./states'),

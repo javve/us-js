@@ -1,5 +1,5 @@
 expect = require('chai').expect;
-style = require('./style.css');
+style = require('./style.scss');
 
 size = require('../src/size.js');
 
