@@ -11,6 +11,7 @@ class Switcher {
 
     this.el = document.getElementById(id);
     this.el.addEventListener('click', (e) => { this.click(e.target); });
+    this.static()
     this.setInitialState()
   }
   setInitialState() {
@@ -37,17 +38,32 @@ class Switcher {
     }
   }
   show(name) {
-    // let currentHeight = $this.outerHeight(true)
-    //   , currentWidth = $this.width(false);
-
     let current = this.states.current()
-      , next = this.states.get(name);
+      , next = this.states.get(name)
+      , currentHeight = size.height(current)
+      , nextHeight = size.height(next);
 
-    console.log(current, next);
-    if (current) {
-      this.states.hide(current);
-    }
-    this.states.show(next);
+    size.height(this.el, currentHeight);
+    setTimeout(() => {
+      this.animate()
+      size.height(this.el, nextHeight);
+      if (current) {
+        this.states.hide(current);
+      }
+      this.states.show(next);
+      setTimeout(() => {
+        this.static();
+      }, 400);
+    }, 10);
+  }
+  animate() {
+    this.el.classList.remove('static');
+    this.el.classList.add('animate');
+  }
+  static() {
+    size.clearHeight(this.el);
+    this.el.classList.remove('animate');
+    this.el.classList.add('static');
   }
 }
 

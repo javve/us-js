@@ -10,14 +10,15 @@ body {
   background-color: #fff;
   box-shadow: 0 1px 2px rgba(0,0,0,.2);
 }
-.toggle-box.toggle-box-animating {
+.toggle-box.animate {
   overflow: hidden;
+  transition: all .4s ease-in-out;
 }
 .state {
   box-sizing: border-box;
   padding:20px;
 }
-.toggle-box.toggle-box-animating .state {
+.toggle-box.animate .state {
   position: absolute;
   top:0;
 }
@@ -26,19 +27,16 @@ body {
 }
 
 
-.toggle-box .state-hide {
+.toggle-box.static .state-hide {
   position: absolute;
   left:-3000px;
 }
 
-.toggle-box.toggle-box-animating {
-  transition: all .2s ease-in-out;
-}
-.toggle-box.toggle-box-animating .state {
-  transition: all .2s ease-in-out;
+.toggle-box.animate .state {
+  transition: all .4s ease-in-out;
 }
 .toggle-box .state {
-  transition: all .2s ease-in-out;
+  transition: all .4s ease-in-out;
 }
 .toggle-box .state-show {
   opacity: 1;
