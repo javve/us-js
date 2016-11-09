@@ -2,7 +2,8 @@ require('./style.scss');
 
 const assign = require('object-assign'),
       states = require('./states'),
-      size = require('./size');
+      size = require('./size'),
+      transition = require('./transition')();
 
 class Switcher {
   constructor(id, options) {
@@ -41,7 +42,9 @@ class Switcher {
     let current = this.states.current()
       , next = this.states.get(name)
       , currentSize = size.get(current)
-      , nextSize = size.get(next);
+      , nextSize = size.get(next)
+      , me = this;
+
     size.set(this.el, currentSize);
     setTimeout(() => {
       this.animate()
@@ -50,9 +53,9 @@ class Switcher {
         this.states.hide(current);
       }
       this.states.show(next);
-      setTimeout(() => {
-        this.static();
-      }, 400);
+      this.el.addEventListener(transition.end, function fn(e) {
+        me.el.removeEventListener(transition.end, fn);
+        me.static();
     }, 10);
   }
   animate() {
