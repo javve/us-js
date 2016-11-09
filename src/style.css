@@ -17,6 +17,7 @@ body {
 .state {
   box-sizing: border-box;
   padding:20px;
+  width:100%;
 }
 .toggle-box.animate .state {
   position: absolute;

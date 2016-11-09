@@ -40,13 +40,12 @@ class Switcher {
   show(name) {
     let current = this.states.current()
       , next = this.states.get(name)
-      , currentHeight = size.height(current)
-      , nextHeight = size.height(next);
-
-    size.height(this.el, currentHeight);
+      , currentSize = size.get(current)
+      , nextSize = size.get(next);
+    size.set(this.el, currentSize);
     setTimeout(() => {
       this.animate()
-      size.height(this.el, nextHeight);
+      size.set(this.el, nextSize);
       if (current) {
         this.states.hide(current);
       }
@@ -61,7 +60,7 @@ class Switcher {
     this.el.classList.add('animate');
   }
   static() {
-    size.clearHeight(this.el);
+    size.clear(this.el);
     this.el.classList.remove('animate');
     this.el.classList.add('static');
   }
