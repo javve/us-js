@@ -46,17 +46,22 @@ class Switcher {
       , me = this;
 
     size.set(this.el, currentSize);
+    this.states.next(next);
     setTimeout(() => {
       this.animate()
-      size.set(this.el, nextSize);
-      if (current) {
-        this.states.hide(current);
-      }
-      this.states.show(next);
-      this.el.addEventListener(transition.end, function fn(e) {
-        me.el.removeEventListener(transition.end, fn);
-        me.static();
-    }, 10);
+        size.set(this.el, nextSize);
+        this.states.previous(current);
+        if (current) {
+          this.states.hide(current);
+        }
+        this.states.show(next);
+        next.addEventListener(transition.end, function fn(e) {
+          me.el.removeEventListener(transition.end, fn);
+          me.static();
+          me.states.clearNext(next);
+          me.states.clearPrevious(current);
+        });
+    }, 100);
   }
   animate() {
     this.el.classList.remove('static');

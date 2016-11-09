@@ -28,12 +28,22 @@ body {
     padding:20px;
     width:100%;
     position: relative;
-    transition: all .4s ease-in-out;
     &.state-show {
       opacity: 1;
     }
     &.state-hide {
       opacity: 0;
+    }
+    &.state-next {
+      transform: translateY(-70px);
+      &.state-show {
+        //transition: all .4s ease-in-out .2s;
+        transition-delay: .2s;
+        transform: translateY(0);
+      }
+    }
+    &.state-previous {
+      transform: translateY(70px);
     }
   }
 }

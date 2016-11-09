@@ -3,6 +3,12 @@ module.exports = (s) => {
     current() {
       return s.el.querySelector('.state-show');
     },
+    next(state) {
+      state.classList.add('state-next');
+    },
+    previous(state) {
+      state.classList.add('state-previous');
+    },
     get(name) {
       return s.el.querySelector('[data-state-name="'+name+'"]');
     },
@@ -16,6 +22,12 @@ module.exports = (s) => {
     },
     all() {
       return s.el.getElementsByClassName('state');
+    },
+    clearNext(state) {
+      state.classList.remove('state-next');
+    },
+    clearPrevious(state) {
+      state.classList.remove('state-previous');
     }
   }
 }
