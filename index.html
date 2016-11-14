@@ -4,15 +4,33 @@
   <div class="state" data-state-name="first">
     <img style="max-width:100%;" src="https://images.confetticdn.com/images/scale/w_300,f_auto/event-5022/image-11b979c9-0105-4d4b-82f3-d10e19495de5/14976838_10154135077571849_850207852586052107_o.jpg">
     <br /><br />
-    <button data-state-trigger="second">Edit</button>
+    <p style="margin-bottom:0;">
+      <button data-state-trigger="first">First</button>
+      <button data-state-trigger="second">Second</button>
+      <button data-state-trigger="third">Third</button>
+    </p>
   </div>
   <div class="state" data-state-name="second">
     <label>Name</label>
     <input type="text" value="Jonny"/>
-    <button data-state-trigger="first">Save</button>
+    <p style="margin-bottom:0;">
+      <button data-state-trigger="first">First</button>
+      <button data-state-trigger="second">Second</button>
+      <button data-state-trigger="third">Third</button>
+    </p>
+  </div>
+  <div class="state" data-state-name="third">
+    <img style="max-width:100%" src="https://images.confetticdn.com/images/scale/w_300,f_auto/event-5072/image-54c0552d-324e-4f94-945d-27649b6121e4/ugly-christmas-sweater-history-ftr.jpg">
+    <h2>Lolz</h2>
+    <input type="text" value="Jonny"/>
+    <p style="margin-bottom:0;">
+      <button data-state-trigger="first">First</button>
+      <button data-state-trigger="second">Second</button>
+      <button data-state-trigger="third">Third</button>
+    </p>
   </div>
 </div>
 
 <script>
-  new Switcher('cool');
+  new Switcher('cool', { style: 'zoom'});
 </script>
