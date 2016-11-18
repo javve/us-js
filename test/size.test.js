@@ -19,7 +19,6 @@ describe('Size', () => {
 
   it('should height via css with padding', () => {
     this.el.classList.add('test-height-padding');
-    console.log(this.el);
     expect(size.height(this.el)).to.equal(820);
   });
 
