@@ -1,14 +1,17 @@
 module.exports = {
+  options: {
+    duration: 1000
+  },
   previous: {
-    translateY: '50px',
+    rotateX: '180deg',
     opacity: 0
   },
   next: {
-    translateY: '-50px',
+    rotateX: '-180deg',
     opacity: 0
   },
   show: {
-    translateY: '0px',
+    rotateX: '0deg',
     opacity: 1
   }
 };

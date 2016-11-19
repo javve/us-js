@@ -1,14 +1,18 @@
 module.exports = {
+  options: {
+    easing: 'linear',
+    duration: 200
+  },
   previous: {
-    translateY: '50px',
+    scale: 2,
     opacity: 0
   },
   next: {
-    translateY: '-50px',
+    scale: 0.8,
     opacity: 0
   },
   show: {
-    translateY: '0px',
+    scale: 1,
     opacity: 1
   }
 };

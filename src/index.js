@@ -11,10 +11,11 @@ const assign = require('object-assign'),
 class Switcher {
   constructor(id, options) {
     this.style = 'default';
-    this.duration = 300;
-    assign(this, options);
+    this.duration = 600;
+    this.easing = 'inOutBack';
+    assign(this, styles[options.style || this.style].options, options);
     this.styles = {}
-    for (const stateName in styles[this.style]) {
+    for (const stateName of ['next', 'show', 'previous']) {
       this.styles[stateName] = css.parseStyle(styles[this.style][stateName]);
     }
     this.states = states(this);
@@ -36,11 +37,7 @@ class Switcher {
       }
     }
   }
-  findStates() {
-    return this.el.getElementsByClassName('state');
-  }
   click(el) {
-    let states = this.findStates();
     let trigger = el.getAttribute('data-state-trigger');
     if (trigger) {
       this.show(trigger);
@@ -84,7 +81,7 @@ class Switcher {
       this.complete = true;
     }
     let p = (now - this.start) / this.duration;
-    let val = easing.linear(p);
+    let val = easing[this.easing](p);
 
     for (const key in this.styles.show) {
       let start = this.styles.next[key].val
@@ -97,7 +94,6 @@ class Switcher {
       this.currentStyle[key].val = (start + (goal - start) * val);
     }
     let newHeight = (this.currentHeight + (this.nextHeight - this.currentHeight) * val);
-
     css.set(this.next, this.nextStyle);
     css.set(this.current, this.currentStyle);
     size.height(this.el, newHeight);
