@@ -3,9 +3,8 @@ require('./style.scss');
 const assign = require('object-assign'),
       states = require('./states'),
       size = require('./size'),
-      transition = require('./transition')(),
-      easing = require('./utils/easing'),
       styles = require('./styles'),
+      easing = require('./utils/easing'),
       css = require('./utils/css')();
 
 class Switcher {
