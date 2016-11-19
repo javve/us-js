@@ -10,42 +10,49 @@ body {
   background-color: #fff;
   box-shadow: 0 1px 2px rgba(0,0,0,.2);
   overflow: hidden; // BUGGY
-  &.animate {
-    transition: all .4s ease-in-out;
-    .state {
-      position: absolute;
-      top:0;
-      transition: all .4s ease-in-out;
-    }
-  }
-  &.static {
-    .state-hide {
-      position: absolute;
-      left:-3000px;
-    }
-  }
+
   .state {
     box-sizing: border-box;
     padding:20px;
     width:100%;
     position: relative;
-    &.state-show {
-      opacity: 1;
-    }
-    &.state-hide {
-      opacity: 0;
-    }
-    &.state-next {
-      transform: translateY(-70px);
-      &.state-show {
-        transition-delay: .2s;
-        transform: translateY(0);
-      }
-    }
-    &.state-previous {
-      transform: translateY(-70px);
-    }
   }
+  // &.animate {
+  //   transition: all .4s ease-in-out;
+  //   .state {
+  //     position: absolute;
+  //     top:0;
+  //     transition: all .4s ease-in-out;
+  //   }
+  // }
+  // &.static {
+  //   .state-hide {
+  //     position: absolute;
+  //     left:-3000px;
+  //   }
+  // }
+  // .state {
+  //   box-sizing: border-box;
+  //   padding:20px;
+  //   width:100%;
+  //   position: relative;
+  //   &.state-show {
+  //     opacity: 1;
+  //   }
+  //   &.state-hide {
+  //     opacity: 0;
+  //   }
+  //   &.state-next {
+  //     transform: translateY(-70px);
+  //     &.state-show {
+  //       transition-delay: .2s;
+  //       transform: translateY(0);
+  //     }
+  //   }
+  //   &.state-previous {
+  //     transform: translateY(-70px);
+  //   }
+  // }
 }
 
 .box.slide {

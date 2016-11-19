@@ -1,34 +1,71 @@
 module.exports = () => {
+  const transformNames = [
+    'matrix', 'matrix3d', 'translate', 'translate3d', 'translateX',
+    'translateY', 'translateZ', 'scale', 'scale3d', 'scaleX', 'scaleY',
+    'scaleZ', 'rotate', 'rotate3d', 'rotateX', 'rotateY', 'rotateZ', 'skew',
+    'skewX', 'skewY'
+  ];
+
   const css = {
-    setStyle: (el, style) => {
+    set: (el, style) => {
+      // Handle existing transform!
+      transformString = css.generateTransformString(style);
+      el.style.transform = transformString;
+
+      if (style.opacity) {
+        el.style.opacity = css.round(style.opacity);
+      }
+    },
+
+    generateTransformString: (style) => {
+      let transformString = ''
       for (const key in style) {
-        css.set(el, key, style[key]);
+        if (transformNames.indexOf(key) == -1) continue;
+        transformString += ' ' + key + '('+ css.round(style[key]) + style[key].unit + ')';
       }
+      return transformString.trim();
     },
-    set: (el, key, val) => {
-      if (key == 'transform') {
-        let transforms = '';
-        for (const transform in val) {
-          transforms += ' ' + transform + '('+ val[transform] + ')';
+
+    parseTransform: (el) => {
+      const nameValue = /([a-z]+)\((.*)\)/i
+      let transformString = (el.style.transform || '').trim()
+      if (transformString.length == 0) return null;
+      let results = {}
+      let transforms = transformString.replace(/\)/g, '))').split(/\) /gi)
+      for (let transform of transforms) {
+        let transformParts = nameValue.exec(transform)
+          , transformName = transformParts[1]
+          , transformValue = transformParts[2]
+          , transformValueParts = css.parseVal(transformValue);
+        results[transformName] = {
+          val: transformValueParts.val,
+          unit: transformValueParts.unit
         }
-        el.style.transform = transforms
-      } else {
-        el.style[key] = val;
-        let res = css.parseVal(val);
-        return {
-          key,
-          val: res.val,
-          unit: res.unit
-        };
       }
+      return results;
     },
+
     // http://rubular.com/r/oBukmdKfFC
     parseVal: (str) => {
       const reg = /(-?\d+\.?\d*)(px|%|deg)?/i
       let result = reg.exec(str)
-        , val = result[1]
+        , val = parseFloat(result[1])
         , unit = result[2] || '';
       return { val, unit };
+    },
+    parseStyle: (style) => {
+      let result = {};
+      for (const key in style) {
+        result[key] = css.parseVal(style[key])
+      }
+      return result;
+    },
+    round: ({val, unit}) => {
+      if (unit == 'px') {
+        return Math.round(val)
+      } else {
+        return (Math.round(val * 100) / 100);
+      }
     }
   };
   return css;

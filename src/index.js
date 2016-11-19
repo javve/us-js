@@ -11,8 +11,12 @@ const assign = require('object-assign'),
 class Switcher {
   constructor(id, options) {
     this.style = 'default';
+    this.duration = 400;
     assign(this, options);
-    this.s = styles[this.style];
+    this.styles = {}
+    for (const stateName in styles[this.style]) {
+      this.styles[stateName] = css.parseStyle(styles[this.style][stateName]);
+    }
     this.states = states(this);
 
     this.el = document.getElementById(id);
@@ -75,8 +79,11 @@ class Switcher {
     // }, 10);
   }
   startLoop() {
-    css.setStyle(this.next, this.s.next);
-    css.setStyle(this.current, this.s.show);
+    css.set(this.next, this.styles.next);
+    css.set(this.current, this.styles.show);
+
+    this.nextStyle = JSON.parse(JSON.stringify(this.styles.next));
+    this.currentStyle = JSON.parse(JSON.stringify(this.styles.show));
 
     // Set values for next
     // Set show for current
@@ -89,13 +96,15 @@ class Switcher {
     // Scale height instead of animate?
 
     this.start = Date.now();
-    this.duration = this.s.duration || 300;
     this.complete = false;
     this.loop()
     this.max = 0;
   }
   loop() {
-    if (this.complete) return;
+    if (this.complete) {
+      console.log('complete');
+      return;
+    }
     requestAnimationFrame(() => this.loop());
     this.animate()
   }
@@ -105,18 +114,29 @@ class Switcher {
       this.complete = true;
     }
     let p = (now - this.start) / this.duration;
-    let val = easing.inElastic(p);
-    console.log(p, val, now, this.start, this.duration);
+    let val = easing.linear(p);
 
-    for (const key in this.currentS.next) {
-      css.set(this.next, key, this.s.next[key]);
+    for (const key in this.styles.show) {
+      let start = this.styles.next[key].val
+      let goal = this.styles.show[key].val
+      this.nextStyle[key].val = (start + (goal - start) * val);
     }
+    for (const key in this.styles.previous) {
+      let start = this.styles.show[key].val
+      let goal = this.styles.previous[key].val
+      this.currentStyle[key].val = (start + (goal - start) * val);
+      if (key == 'opacity') {
+        console.log(this.currentStyle[key].val, start, goal, val);
+      }
+    }
+    css.set(this.next, this.nextStyle);
+    css.set(this.current, this.currentStyle);
 
     //x = startx + (destx - startx) * val;
-    this.max++;
-    if (this.max > 20) {
-      this.complete = true;
-    }
+    // this.max++;
+    // if (this.max > 20) {
+    //   this.complete = true;
+    // }
   }
   static() {
     size.clear(this.el);

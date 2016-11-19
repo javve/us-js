@@ -1,4 +1,10 @@
+// https://github.com/component/ease
 // easing functions from "Tween.js"
+/*
+Copyright (c) 2010-2012 Tween.js authors.
+Easing equations Copyright (c) 2001 Robert Penner http://robertpenner.com/easing/
+*/
+
 module.exports = {
   linear: (n) => {
     return n;
