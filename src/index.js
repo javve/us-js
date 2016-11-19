@@ -11,7 +11,7 @@ const assign = require('object-assign'),
 class Switcher {
   constructor(id, options) {
     this.style = 'default';
-    this.duration = 400;
+    this.duration = 300;
     assign(this, options);
     this.styles = {}
     for (const stateName in styles[this.style]) {
@@ -52,60 +52,30 @@ class Switcher {
     let current = this.current = this.states.current();
     let next = this.next = this.states.get(name);
 
-    let currentSize = size.get(current)
-      , nextSize = size.get(next)
+    let currentHeight = this.currentHeight = size.height(current)
+      , nextHeight = this.nextHeight = size.height(next)
       , me = this;
 
     if (this.current == this.next) {
       return;
     }
-    this.startLoop();
-    // size.set(this.el, currentSize);
-    // this.states.next(next);
-    // setTimeout(() => {
-    //   this.animate()
-    //   //size.set(this.el, nextSize);
-    //   this.states.previous(current);
-    //   if (current) {
-    //     this.states.hide(current);
-    //   }
-    //   this.states.show(next);
-    //   next.addEventListener(transition.end, function fn(e) {
-    //     me.el.removeEventListener(transition.end, fn);
-    //     me.static();
-    //     me.states.clearNext(next);
-    //     me.states.clearPrevious(current);
-    //   });
-    // }, 10);
-  }
-  startLoop() {
-    css.set(this.next, this.styles.next);
-    css.set(this.current, this.styles.show);
-
-    this.nextStyle = JSON.parse(JSON.stringify(this.styles.next));
-    this.currentStyle = JSON.parse(JSON.stringify(this.styles.show));
-
-    // Set values for next
-    // Set show for current
-    // Animate next to show
-    // Animate current to previous
-
-    // When complete, set previous to regular hide
-
-    // NEEDS SET METHOD
-    // Scale height instead of animate?
+    this.states.next(next);
+    this.states.previous(current);
 
     this.start = Date.now();
     this.complete = false;
-    this.loop()
-    this.max = 0;
+    size.height(this.el, currentHeight);
+    this.loop(() => {
+      me.states.show(next);
+      me.states.hide(current);
+      size.clearHeight(this.el);
+    });
   }
-  loop() {
+  loop(callback) {
     if (this.complete) {
-      console.log('complete');
-      return;
+      return callback();
     }
-    requestAnimationFrame(() => this.loop());
+    requestAnimationFrame(() => this.loop(callback));
     this.animate()
   }
   animate() {
@@ -125,18 +95,12 @@ class Switcher {
       let start = this.styles.show[key].val
       let goal = this.styles.previous[key].val
       this.currentStyle[key].val = (start + (goal - start) * val);
-      if (key == 'opacity') {
-        console.log(this.currentStyle[key].val, start, goal, val);
-      }
     }
+    let newHeight = (this.currentHeight + (this.nextHeight - this.currentHeight) * val);
+
     css.set(this.next, this.nextStyle);
     css.set(this.current, this.currentStyle);
-
-    //x = startx + (destx - startx) * val;
-    // this.max++;
-    // if (this.max > 20) {
-    //   this.complete = true;
-    // }
+    size.height(this.el, newHeight);
   }
   static() {
     size.clear(this.el);

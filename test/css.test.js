@@ -30,6 +30,11 @@ describe('CSS', () => {
     expect(this.el.style.transform).to.equal('translateY(10px) scale(1.3)');
   });
 
+  it('should set position', () => {
+    let res = css.set(this.el, { position: { val: 'absolute', unit: '' }});
+    expect(this.el.style.position).to.equal('absolute');
+  });
+
   it('should set full style', () => {
     css.set(this.el, {
       translateY: { val:10, unit:'px'},

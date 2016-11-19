@@ -1,19 +1,15 @@
 module.exports = {
   previous: {
-    translateY: '20px',
+    translateY: '-50px',
     opacity: 0
   },
   next: {
-    translateY: '-20px',
+    translateY: '50px',
     opacity: 0
   },
   show: {
-    translateY: '0',
+    translateY: '0px',
     opacity: 1
-  },
-  hide: {
-    translateY: '0',
-    opacity: 0
   }
 };
 

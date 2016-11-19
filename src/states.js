@@ -1,33 +1,46 @@
+const css = require('./utils/css')();
+
 module.exports = (s) => {
+  const styles = {
+    absolute: {
+      position: { val:'absolute', unit:'' },
+      left: { val:0, unit: '' }
+    },
+    hide: {
+      position: { val:'absolute', unit:'' },
+      left: { val:-3000, unit: 'px' }
+    }
+  };
+
   return {
     current() {
       return s.el.querySelector('.state-show');
     },
     next(state) {
-      state.classList.add('state-next');
+      css.set(state, styles.absolute);
+      css.set(state, s.styles.next);
+      s.nextStyle = JSON.parse(JSON.stringify(s.styles.next));
     },
     previous(state) {
-      state.classList.add('state-previous');
+      css.set(state, styles.absolute);
+      css.set(state, s.styles.show);
+      s.currentStyle = JSON.parse(JSON.stringify(s.styles.show));
     },
     get(name) {
       return s.el.querySelector('[data-state-name="'+name+'"]');
     },
     show(state) {
-      state.classList.remove('state-hide');
+      css.clear(state, styles.hide);
       state.classList.add('state-show');
     },
     hide(state) {
       state.classList.remove('state-show');
-      state.classList.add('state-hide');
+      css.clear(state, s.styles.previous);
+      css.clear(state, s.styles.show);
+      css.set(state, styles.hide);
     },
     all() {
       return s.el.getElementsByClassName('state');
-    },
-    clearNext(state) {
-      state.classList.remove('state-next');
-    },
-    clearPrevious(state) {
-      state.classList.remove('state-previous');
     }
   }
 }

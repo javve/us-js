@@ -12,8 +12,17 @@ module.exports = () => {
       transformString = css.generateTransformString(style);
       el.style.transform = transformString;
 
-      if (style.opacity) {
-        el.style.opacity = css.round(style.opacity);
+      for (const key in style) {
+        if (transformNames.indexOf(key) > -1) continue;
+        el.style[key] = css.round(style[key]);
+      }
+    },
+
+    clear: (el, style) => {
+      el.style.transform = null;
+      for (const key in style) {
+        if (transformNames.indexOf(key) > -1) continue;
+        el.style[key] = null;
       }
     },
 
@@ -47,10 +56,16 @@ module.exports = () => {
 
     // http://rubular.com/r/oBukmdKfFC
     parseVal: (str) => {
-      const reg = /(-?\d+\.?\d*)(px|%|deg)?/i
-      let result = reg.exec(str)
-        , val = parseFloat(result[1])
-        , unit = result[2] || '';
+      const number = /(-?\d+\.?\d*)(px|%|deg)?/i
+      let result = number.exec(str);
+      let val, unit;
+      if (result) {
+        val = parseFloat(result[1])
+        unit = result[2] || '';
+      } else {
+        val = str;
+        unit = '';
+      }
       return { val, unit };
     },
     parseStyle: (style) => {
@@ -63,6 +78,8 @@ module.exports = () => {
     round: ({val, unit}) => {
       if (unit == 'px') {
         return Math.round(val)
+      } else if (isNaN(val)) {
+        return val;
       } else {
         return (Math.round(val * 100) / 100);
       }
