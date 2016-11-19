@@ -2,8 +2,8 @@ require('./style.scss');
 
 const assign = require('object-assign'),
       states = require('./states'),
-      size = require('./size'),
       styles = require('./styles'),
+      size = require('./utils/size'),
       easing = require('./utils/easing'),
       css = require('./utils/css')();
 
