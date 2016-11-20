@@ -12,9 +12,14 @@ module.exports = (s) => {
     }
   };
 
-  return {
+  const states = {
     current() {
-      return s.el.querySelector('.state-show');
+      for (let state of states.all()) {
+        if (state.classList.contains('state-show')) {
+          return state;
+        }
+      }
+      return null;
     },
     next(state) {
       css.set(state, styles.absolute);
@@ -27,7 +32,12 @@ module.exports = (s) => {
       s.currentStyle = JSON.parse(JSON.stringify(s.styles.show));
     },
     get(name) {
-      return s.el.querySelector('[data-state-name="'+name+'"]');
+      for (let state of states.all()) {
+        if (state.getAttribute('data-state-name') == name) {
+          return state;
+        }
+      }
+      return null;
     },
     show(state) {
       css.clear(state, styles.hide);
@@ -40,7 +50,16 @@ module.exports = (s) => {
       css.set(state, styles.hide);
     },
     all() {
-      return s.el.getElementsByClassName('state');
+      let nodes = s.el.childNodes
+        , states = [];
+      for (let node of nodes) {
+        if (node.data === undefined) {
+          states.push(node);
+        }
+      }
+      return states;
     }
   }
+
+  return states;
 }

@@ -20,7 +20,10 @@ class Switcher {
     this.states = states(this);
 
     this.el = document.getElementById(id);
-    this.el.addEventListener('click', (e) => { this.click(e.target); });
+    this.el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.click(e.target);
+    });
     this.el.classList.add(this.style);
     this.static()
     this.setInitialState()
@@ -40,8 +43,6 @@ class Switcher {
     let trigger = el.getAttribute('data-state-trigger');
     if (trigger) {
       this.show(trigger);
-    } else {
-
     }
   }
   show(name) {
