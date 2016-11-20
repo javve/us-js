@@ -11,28 +11,28 @@ body {
   background-color: #fff;
   box-shadow: 0 1px 2px rgba(0,0,0,.2);
   overflow: hidden;
-  & > div {
-    box-sizing: border-box;
-    padding:20px;
-    width:100%;
-    position: relative;
-  }
 }
+.box.default > div {
+  box-sizing: border-box;
+  padding:20px;
+  width:100%;
+  position: relative;
+}
+
 
 .box.slide {
   position: relative;
   width:300px;
   margin:0 auto 20px;
-  //overflow: hidden; // BUGGY
-  & > div {
-    background-color: #fff;
-    box-shadow: 0 1px 2px rgba(0,0,0,.2);
+}
+.box.slide > div {
+  background-color: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,.2);
 
-    box-sizing: border-box;
-    padding:20px;
-    width:100%;
-    position: relative;
-  }
+  box-sizing: border-box;
+  padding:20px;
+  width:100%;
+  position: relative;
 }
 
 .box.flip {
@@ -40,14 +40,14 @@ body {
   position: relative;
   width:300px;
   margin:0 auto 20px;
-  & > div {
-    background-color: #fff;
-    box-shadow: 0 1px 2px rgba(0,0,0,.2);
-    box-sizing: border-box;
-    padding:20px;
-    width:100%;
-    position: relative;
-  }
+}
+.box.flip > div {
+  background-color: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,.2);
+  box-sizing: border-box;
+  padding:20px;
+  width:100%;
+  position: relative;
 }
 
 
@@ -58,12 +58,12 @@ body {
   background-color: #fff;
   box-shadow: 0 1px 2px rgba(0,0,0,.2);
   overflow: hidden; // BUGGY
-  & > div {
-    box-sizing: border-box;
-    padding:20px;
-    width:100%;
-    position: relative;
-  }
+}
+.box.zoom > div {
+  box-sizing: border-box;
+  padding:20px;
+  width:100%;
+  position: relative;
 }
 
 
@@ -71,14 +71,14 @@ body {
   position: relative;
   width:300px;
   margin:0 auto 20px;
-  & > div {
-    background-color: #fff;
-    box-shadow: 0 1px 2px rgba(0,0,0,.2);
-    box-sizing: border-box;
-    padding:20px;
-    width:100%;
-    position: relative;
-  }
+}
+.box.zoom2 > div {
+  background-color: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,.2);
+  box-sizing: border-box;
+  padding:20px;
+  width:100%;
+  position: relative;
 }
 
 #all {

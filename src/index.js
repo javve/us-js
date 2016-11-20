@@ -1,5 +1,3 @@
-require('./style.scss');
-
 const assign = require('object-assign'),
       states = require('./states'),
       styles = require('./styles'),
@@ -8,7 +6,7 @@ const assign = require('object-assign'),
       css = require('./utils/css')();
 
 class Switcher {
-  constructor(id, options) {
+  constructor(id, options = {}) {
     this.style = 'default';
     this.duration = 600;
     this.easing = 'inOutBack';
