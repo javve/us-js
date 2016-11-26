@@ -9,7 +9,7 @@ module.exports = () => {
   const css = {
     set: (el, style) => {
       // Handle existing transform!
-      transformString = css.generateTransformString(style);
+      let transformString = css.generateTransformString(style);
       el.style.transform = transformString;
 
       for (const key in style) {

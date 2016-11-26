@@ -13,8 +13,8 @@ module.exports = (s) => {
   };
 
   const states = {
-    current() {
-      for (let state of states.all()) {
+    current(container) {
+      for (let state of states.all(container)) {
         if (state.classList.contains('state-show')) {
           return state;
         }
@@ -31,13 +31,17 @@ module.exports = (s) => {
       css.set(state, s.styles.show);
       s.currentStyle = JSON.parse(JSON.stringify(s.styles.show));
     },
-    get(name) {
-      for (let state of states.all()) {
-        if (state.getAttribute('data-state-name') == name) {
+    get(name, container) {
+      for (let state of states.all(container)) {
+        console.log('->', state.getAttribute('data-us-name'))
+        if (state.getAttribute('data-us-name') == name) {
           return state;
         }
       }
       return null;
+    },
+    name(state) {
+      return state.getAttribute('data-us-name');
     },
     show(state) {
       css.clear(state, styles.hide);
@@ -49,8 +53,8 @@ module.exports = (s) => {
       css.clear(state, s.styles.show);
       css.set(state, styles.hide);
     },
-    all() {
-      let nodes = s.el.childNodes
+    all(container) {
+      let nodes = container.childNodes
         , states = [];
       for (let node of nodes) {
         if (node.data === undefined) {
@@ -58,6 +62,28 @@ module.exports = (s) => {
         }
       }
       return states;
+    },
+    allContainers() {
+      let states = document.querySelectorAll('[data-us-name]')
+        , containers = [];
+      for (let state of states) {
+        let stateContainer = state.parentNode;
+        if (containers.indexOf(stateContainer) == -1) {
+          containers.push(stateContainer);
+        }
+      }
+      return containers;
+    },
+    closestContainer(el) {
+      if (el.getAttribute('data-us-name')) {
+        return el.parentNode;
+      } else {
+        if (document.body === el) {
+          return null;
+        } else {
+          return states.closestContainer(el.parentNode);
+        }
+      }
     }
   }
 
