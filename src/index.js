@@ -1,5 +1,6 @@
 const assign = require('object-assign'),
       states = require('./states'),
+      containers = require('./containers'),
       styles = require('./styles'),
       size = require('./utils/size'),
       easing = require('./utils/easing'),
@@ -8,6 +9,7 @@ const assign = require('object-assign'),
 class Switcher {
   constructor(id, options = {}) {
     this.states = states(this);
+    this.containers = containers(this);
 
     this.style = 'default';
     this.duration = 600;
@@ -25,7 +27,7 @@ class Switcher {
     });
     this.el.classList.add('us-style-'+this.style);
 
-    for (let container of this.states.allContainers()) {
+    for (let container of this.containers.all()) {
       this.setInitialState(container);
     }
   }
@@ -47,12 +49,19 @@ class Switcher {
       , container = null;
 
     if (show) {
-      container = this.states.closestContainer(el);
+      let showParts = show.split('.');
+      if (showParts.length == 1) {
+        container = this.containers.closest(el);
+      } else {
+        let [containerName, stateName] = showParts;
+        container = document.querySelector('[data-us="'+containerName+'"]');
+        show = stateName;
+      }
       console.log('contai:', container)
       this.show(show, container);
     }
     if (hide) {
-      container = this.states.closestContainer(el);
+      container = this.containers.closest(el);
       this.hide(hide, container);
     }
   }

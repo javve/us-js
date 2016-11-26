@@ -62,28 +62,6 @@ module.exports = (s) => {
         }
       }
       return states;
-    },
-    allContainers() {
-      let states = document.querySelectorAll('[data-us-name]')
-        , containers = [];
-      for (let state of states) {
-        let stateContainer = state.parentNode;
-        if (containers.indexOf(stateContainer) == -1) {
-          containers.push(stateContainer);
-        }
-      }
-      return containers;
-    },
-    closestContainer(el) {
-      if (el.getAttribute('data-us-name')) {
-        return el.parentNode;
-      } else {
-        if (document.body === el) {
-          return null;
-        } else {
-          return states.closestContainer(el.parentNode);
-        }
-      }
     }
   }
 
