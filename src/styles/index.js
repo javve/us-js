@@ -3,5 +3,9 @@ module.exports = {
   zoom: require('./zoom'),
   zoom2: require('./zoom2'),
   slide: require('./slide'),
-  flip: require('./flip')
+  flip: require('./flip'),
+  get: (name) => {
+    // parse first!
+    return JSON.parse(JSON.stringify(this[name]));
+  }
 };

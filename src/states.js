@@ -4,7 +4,8 @@ module.exports = (s) => {
   const styles = {
     absolute: {
       position: { val:'absolute', unit:'' },
-      left: { val:0, unit: '' }
+      left: { val:0, unit: '' },
+      top: { val:0, unit: '' }
     },
     hide: {
       position: { val:'absolute', unit:'' },
@@ -14,12 +15,17 @@ module.exports = (s) => {
 
   const states = {
     current(container) {
-      for (let state of states.all(container)) {
+      let all = states.all(container);
+      for (let state of all) {
         if (state.classList.contains('state-show')) {
           return state;
         }
       }
-      return null;
+      if (all.length) {
+        return all[0];
+      } else {
+        return null;
+      }
     },
     next(state) {
       css.set(state, styles.absolute);
@@ -44,13 +50,14 @@ module.exports = (s) => {
       return state.getAttribute('data-us-name');
     },
     show(state) {
-      css.clear(state, styles.hide);
+      //css.clear(state, styles.hide);
       state.classList.add('state-show');
+      css.set(state, styles.absolute);
     },
     hide(state) {
       state.classList.remove('state-show');
-      css.clear(state, s.styles.previous);
-      css.clear(state, s.styles.show);
+      //css.clear(state, s.styles.previous);
+      //css.clear(state, s.styles.show);
       css.set(state, styles.hide);
     },
     all(container) {
