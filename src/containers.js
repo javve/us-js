@@ -1,4 +1,4 @@
-const css = require('./utils/css')();
+const css = require('./utils/css');
 
 module.exports = (s) => {
   const containers = {

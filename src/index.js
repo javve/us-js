@@ -5,32 +5,28 @@ const assign = require('object-assign'),
       styles = require('./styles'),
       size = require('./utils/size'),
       easing = require('./utils/easing'),
-      css = require('./utils/css')(),
+      css = require('./utils/css'),
       parseTrigger = require('./utils/parse-trigger');
 
 class Switcher {
   constructor(id, options = {}) {
-    this.states = states(this);
     this.containers = containers(this);
     this.animations = [];
     this.completedAnimations = [];
 
-    this.style = 'default';
-    this.duration = 600;
-    this.easing = 'inOutQuad';
-    assign(this, styles[options.style || this.style].options, options);
+    assign(this, options);
 
-    this.styles = {}
-    for (const stateName of ['next', 'show', 'previous']) {
-      this.styles[stateName] = css.parseStyle(styles[this.style][stateName]);
-    }
+    // this.styles = {}
+    // for (const stateName of ['next', 'show', 'previous']) {
+    //   this.styles[stateName] = css.parseStyle(styles[this.style][stateName]);
+    // }
 
-    this.el = document.getElementById(id);
+    // this.el = document.getElementById(id);
     document.body.addEventListener('click', (e) => {
       e.stopPropagation();
       this.click(e.target);
     });
-    this.el.classList.add('us-style-'+this.style);
+    //this.el.classList.add('us-style-'+this.style);
 
     for (let container of this.containers.all()) {
       this.setInitialState(container);
@@ -38,12 +34,11 @@ class Switcher {
   }
   setInitialState(container) {
     let first = true;
-    for (let state of this.states.all(container)) {
+    for (let state of states.all(container)) {
       if (first) {
-        this.el.classList.add('us-'+this.states.name(state));
         first = false;
       } else {
-        this.states.hide(state);
+        states.hide(state);
       }
     }
   }
@@ -68,43 +63,38 @@ class Switcher {
     }
   }
   show(name, container = null) {
-    if (!container) {
-      throw new Error('no container?!')
-    }
-    let current = this.states.current(container)
-      , next = this.states.get(name, container);
+    if (!container) throw new Error('no container?!');
 
-    console.log('container', container);
-    console.log('current', current);
+    let current = states.current(container)
+      , next = states.get(name, container);
 
-    if (next == null || current == null) {
-      return;
-    }
-    if (current == next) {
-      return;
-    }
+
+    if (next == null || current == null) return;
+    if (current == next) return;
 
     let currentHeight = this.currentHeight = size.height(current)
       , nextHeight = this.nextHeight = size.height(next)
-      , me = this;
+      , me = this
+      , currentStyle = styles.get('default')
+      , nextStyle = styles.get('default');
 
     this.a(current, {
-      from: this.styles.show,
-      to: this.styles.previous,
+      from: currentStyle.show,
+      to: currentStyle.previous,
       after: () => {
-        //end ()
-        me.states.hide(current);
+        states.hide(current);
       },
+      hide: true,
       duration: 400,
       delay:0
     });
     this.a(next, {
-      before: () => {
+      after: () => {
         //show()
-        me.states.show(next);
+        states.show(next);
       },
-      from: this.styles.next,
-      to: this.styles.show,
+      from: nextStyle.next,
+      to: nextStyle.show,
       duration: 400,
       delay:0
     });
@@ -120,10 +110,10 @@ class Switcher {
       delay:0
     });
 
-    // this.el.classList.remove('us-'+this.states.name(current));
+    // this.el.classList.remove('us-'+states.name(current));
     // this.el.classList.add('us-'+name);
-    //this.states.next(next);
-    //this.states.previous(current);
+    //states.next(next);
+    //states.previous(current);
     // size.height(container, currentHeight);
     //
     // this.loop(() => {
@@ -136,13 +126,13 @@ class Switcher {
   }
   hide(name) {
     // already hidden?
-    let current = this.current = this.states.current()
+    let current = this.current = states.current()
       , me = this;
 
     let currentHeight = this.currentHeight = size.height(current)
       , nextHeight = this.nextHeight = 0;
 
-    this.states.previous(current);
+    states.previous(current);
     size.height(this.el, currentHeight);
 
     this.loop();
@@ -150,9 +140,7 @@ class Switcher {
   a(el, options) {
     let a = new USA(el, options)
     this.animations.push(a);
-    console.log('is animating', this.animating);
     if (!this.animating) {
-      console.log('start now')
       this.animate();
       this.animating = true;
     }

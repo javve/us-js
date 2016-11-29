@@ -1,4 +1,4 @@
-module.exports = () => {
+module.exports = (() => {
   const transformNames = [
     'matrix', 'matrix3d', 'translate', 'translate3d', 'translateX',
     'translateY', 'translateZ', 'scale', 'scale3d', 'scaleX', 'scaleY',
@@ -86,4 +86,4 @@ module.exports = () => {
     }
   };
   return css;
-};
+})();

@@ -9,12 +9,13 @@ module.exports = (str) => {
     let triggerParts = trigger.split('.');
     if (triggerParts.length == 1) {
       results.push({
-        stateName: trigger
+        stateName: trigger.trim()
       });
     } else {
       let [containerName, stateName] = triggerParts;
       results.push({
-        stateName, containerName
+        stateName: stateName.trim(),
+        containerName: containerName.trim()
       });
     }
   }

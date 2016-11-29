@@ -1,6 +1,17 @@
 const assign = require('object-assign'),
       easing = require('./utils/easing'),
-      css = require('./utils/css')();
+      css = require('./utils/css'),
+      STYLES = {
+        absolute: {
+          position: { val:'absolute', unit:'' },
+          left: { val:0, unit: '' },
+          top: { val:0, unit: '' }
+        },
+        hide: {
+          position: { val:'absolute', unit:'' },
+          left: { val:-3000, unit: 'px' }
+        }
+      };
 
 class USA {
   constructor(el, options) {
@@ -11,23 +22,21 @@ class USA {
     this.delay = options.delay || 0;
     this.before = options.before;
     this.after = options.after;
-    this.easing = 'inOutQuad';
+    this.easing = options.easing || 'inOutQuad';
+    this.static = options.static || false;
+
     this.ended = false;
     this.current = {};
-    console.log(this);
+
     // Set defaults
     this.start()
   }
   start() {
     // Show the item
     this.start = Date.now()
+    console.log('ey', this.static);
     if (!this.static) {
-      css.set(this.el, {
-        absolute: {
-          position: { val:'absolute', unit:'' },
-          left: { val:0, unit: '' }
-        }
-      });
+      css.set(this.el, STYLES.absolute);
     }
 
     if (this.before) {
@@ -41,6 +50,11 @@ class USA {
     //   }
     // });
     // Clear the set state
+    if (this.hide) {
+      css.set(this.el, STYLES.hide);
+    } else {
+      css.clear(this.el, STYLES.absolute);
+    }
     if (this.after) {
       this.after()
     }
@@ -50,7 +64,7 @@ class USA {
       , p = (now - this.start) / this.duration
       , val = easing[this.easing](p);
 
-    console.log((now - this.start));
+    //console.log((now - this.start));
     if (now - this.start >= this.duration) {
       this.complete();
       return false;

@@ -1,6 +1,6 @@
-const css = require('./utils/css')();
+const css = require('./utils/css');
 
-module.exports = (s) => {
+module.exports = (() => {
   const styles = {
     absolute: {
       position: { val:'absolute', unit:'' },
@@ -27,19 +27,18 @@ module.exports = (s) => {
         return null;
       }
     },
-    next(state) {
-      css.set(state, styles.absolute);
-      css.set(state, s.styles.next);
-      s.nextStyle = JSON.parse(JSON.stringify(s.styles.next));
-    },
-    previous(state) {
-      css.set(state, styles.absolute);
-      css.set(state, s.styles.show);
-      s.currentStyle = JSON.parse(JSON.stringify(s.styles.show));
-    },
+    // next(state) {
+    //   css.set(state, styles.absolute);
+    //   css.set(state, s.styles.next);
+    //   s.nextStyle = JSON.parse(JSON.stringify(s.styles.next));
+    // },
+    // previous(state) {
+    //   css.set(state, styles.absolute);
+    //   css.set(state, s.styles.show);
+    //   s.currentStyle = JSON.parse(JSON.stringify(s.styles.show));
+    // },
     get(name, container) {
       for (let state of states.all(container)) {
-        console.log('->', state.getAttribute('data-us-name'))
         if (state.getAttribute('data-us-name') == name) {
           return state;
         }
@@ -52,7 +51,7 @@ module.exports = (s) => {
     show(state) {
       //css.clear(state, styles.hide);
       state.classList.add('state-show');
-      css.set(state, styles.absolute);
+      //css.set(state, styles.absolute);
     },
     hide(state) {
       state.classList.remove('state-show');
@@ -73,4 +72,4 @@ module.exports = (s) => {
   }
 
   return states;
-}
+})()
