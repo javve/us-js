@@ -75,9 +75,10 @@ class Switcher {
     let currentHeight = this.currentHeight = size.height(current)
       , nextHeight = this.nextHeight = size.height(next)
       , me = this
-      , currentStyle = styles.get('default')
-      , nextStyle = styles.get('default');
-
+      , style = container.getAttribute('data-us-style') || 'default'
+      , currentStyle = styles.get(style)
+      , nextStyle = styles.get(style);
+    console.log(style, nextStyle);
     this.a(current, {
       from: currentStyle.show,
       to: currentStyle.previous,
@@ -90,7 +91,6 @@ class Switcher {
     });
     this.a(next, {
       after: () => {
-        //show()
         states.show(next);
       },
       from: nextStyle.next,
@@ -104,6 +104,9 @@ class Switcher {
       },
       to: {
         height: { val: nextHeight, unit: 'px' }
+      },
+      after: () => {
+        size.clearHeight(container);
       },
       static: true,
       duration: 400,
@@ -144,8 +147,6 @@ class Switcher {
       this.animate();
       this.animating = true;
     }
-    // add custom animation
-    //us.a(el, 'style');
   }
   animate() {
     if (this.animations.length) {
@@ -164,34 +165,6 @@ class Switcher {
       this.animations.splice(this.animations.indexOf(a), 1);
     }
   }
-  //animate() {
-
-    // let now = Date.now()
-    // if (now - this.start >= this.duration) {
-    //   this.complete = true;
-    // }
-    // let p = (now - this.start) / this.duration;
-    // let val = easing[this.easing](p);
-    //
-    // if (this.nextStyle) { // No style if hide
-    //   for (const key in this.styles.show) {
-    //     let start = this.styles.next[key].val
-    //     let goal = this.styles.show[key].val
-    //     this.nextStyle[key].val = (start + (goal - start) * val);
-    //   }
-    //   css.set(this.next, this.nextStyle);
-    // }
-    //
-    // for (const key in this.styles.previous) {
-    //   let start = this.styles.show[key].val
-    //   let goal = this.styles.previous[key].val
-    //   this.currentStyle[key].val = (start + (goal - start) * val);
-    // }
-    // css.set(this.current, this.currentStyle);
-    //
-    // let newHeight = (this.currentHeight + (this.nextHeight - this.currentHeight) * val);
-    // size.height(this.el, newHeight);
-  //}
 }
 
 module.exports = Switcher

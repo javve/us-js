@@ -34,10 +34,10 @@ class USA {
   start() {
     // Show the item
     this.start = Date.now()
-    console.log('ey', this.static);
     if (!this.static) {
       css.set(this.el, STYLES.absolute);
     }
+    css.set(this.el, this.from);
 
     if (this.before) {
       this.before()
@@ -75,6 +75,7 @@ class USA {
       let goal = this.to[key].val
       this.current[key] = this.current[key] || {}
       this.current[key].val = (start + (goal - start) * val);
+      this.current[key].unit = this.from[key].unit;
     }
     css.set(this.el, this.current);
     return true;

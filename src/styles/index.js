@@ -13,7 +13,6 @@ module.exports = (() => {
   return {
     get: (name) => {
       let result = {};
-      console.log(STYLES);
       for (const style in STYLES[name]) {
         result[style] = css.parseStyle(STYLES[name][style]);
       }
