@@ -75,9 +75,38 @@ class Switcher {
     let currentHeight = this.currentHeight = size.height(current)
       , nextHeight = this.nextHeight = size.height(next)
       , me = this
-      , currentStyle = styles[current.getAttribute('data-us-style-hide') || current.getAttribute('data-us-style') || container.getAttribute('data-us-style-hide') || container.getAttribute('data-us-style') || 'default']
-      , nextStyle = styles[current.getAttribute('data-us-style-show') || next.getAttribute('data-us-style') || container.getAttribute('data-us-style-show') || container.getAttribute('data-us-style') || 'default'];
-
+      , currentStyle =
+          styles[current.getAttribute('data-us-hide-style')
+          || current.getAttribute('data-us-style')
+          || container.getAttribute('data-us-hide-style')
+          || container.getAttribute('data-us-style')
+          || 'default']
+      , nextStyle =
+          styles[next.getAttribute('data-us-show-style')
+          || next.getAttribute('data-us-style')
+          || container.getAttribute('data-us-show-style')
+          || container.getAttribute('data-us-style')
+          || 'default']
+      , currentDuration =
+          current.getAttribute('data-us-hide-duration')
+          || current.getAttribute('data-us-duration')
+          || container.getAttribute('data-us-hide-duration')
+          || container.getAttribute('data-us-duration')
+      , nextDuration =
+          next.getAttribute('data-us-show-duration')
+          || next.getAttribute('data-us-duration')
+          || container.getAttribute('data-us-show-duration')
+          || container.getAttribute('data-us-duration')
+      , currentDelay =
+          current.getAttribute('data-us-hide-delay')
+          || current.getAttribute('data-us-delay')
+          || container.getAttribute('data-us-hide-delay')
+          || container.getAttribute('data-us-delay')
+      , nextDelay =
+          next.getAttribute('data-us-show-delay')
+          || next.getAttribute('data-us-delay')
+          || container.getAttribute('data-us-show-delay')
+          || container.getAttribute('data-us-delay');
     this.a(current, {
       from: currentStyle.show,
       to: currentStyle.previous,
@@ -85,8 +114,8 @@ class Switcher {
         states.hide(current);
       },
       hide: true,
-      duration: 400,
-      delay:0
+      duration: currentDuration,
+      delay:currentDelay
     });
     this.a(next, {
       after: () => {
@@ -94,8 +123,8 @@ class Switcher {
       },
       from: nextStyle.next,
       to: nextStyle.show,
-      duration: 400,
-      delay:0
+      duration: nextDuration,
+      delay:nextDelay
     });
     this.a(container, {
       from: {

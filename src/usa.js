@@ -18,8 +18,8 @@ class USA {
     this.el = el;
     this.from = css.parseStyle(options.from);
     this.to = css.parseStyle(options.to);
-    this.duration = options.duration || 400;
-    this.delay = options.delay || 0;
+    this.duration = parseInt(options.duration || 400);
+    this.delay = parseInt(options.delay || 0);
     this.before = options.before;
     this.after = options.after;
     this.easing = options.easing || 'inOutQuad';
@@ -60,15 +60,18 @@ class USA {
     }
   }
   tick() {
-    let now = Date.now()
-      , p = (now - this.start) / this.duration
-      , val = easing[this.easing](p);
+    let now = Date.now();
 
+    if ((now - this.start) < this.delay) return true;
+
+    let p = (now - this.delay - this.start) / this.duration
+      , val = easing[this.easing](p);
     //console.log((now - this.start));
-    if (now - this.start >= this.duration) {
+    if (now - this.start >= (this.duration + this.delay)) {
       this.complete();
       return false;
     }
+
 
     for (const key in this.to) {
       let start = this.from[key].val
