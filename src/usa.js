@@ -66,7 +66,7 @@ class USA {
 
     let p = (now - this.delay - this.start) / this.duration
       , val = easing[this.easing](p);
-    //console.log((now - this.start));
+
     if (now - this.start >= (this.duration + this.delay)) {
       this.complete();
       return false;

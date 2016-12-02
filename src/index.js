@@ -6,7 +6,7 @@ const assign = require('object-assign'),
       size = require('./utils/size'),
       easing = require('./utils/easing'),
       css = require('./utils/css'),
-      parseTrigger = require('./utils/parse-trigger');
+      common = require('./utils/common');
 
 class Switcher {
   constructor(id, options = {}) {
@@ -43,8 +43,8 @@ class Switcher {
     }
   }
   click(el) {
-    let showStates = parseTrigger(el.getAttribute('data-us-show'))
-      , hideStates = parseTrigger(el.getAttribute('data-us-hide'))
+    let showStates = common.parseTrigger(el.getAttribute('data-us-show'))
+      , hideStates = common.parseTrigger(el.getAttribute('data-us-hide'))
       , container = null;
 
     const getContainer = (o) => {
@@ -68,65 +68,40 @@ class Switcher {
     let current = states.current(container)
       , next = states.get(name, container);
 
-
     if (next == null || current == null) return;
     if (current == next) return;
 
     let currentHeight = this.currentHeight = size.height(current)
       , nextHeight = this.nextHeight = size.height(next)
       , me = this
-      , currentStyle =
-          styles[current.getAttribute('data-us-hide-style')
-          || current.getAttribute('data-us-style')
-          || container.getAttribute('data-us-hide-style')
-          || container.getAttribute('data-us-style')
-          || 'default']
-      , nextStyle =
-          styles[next.getAttribute('data-us-show-style')
-          || next.getAttribute('data-us-style')
-          || container.getAttribute('data-us-show-style')
-          || container.getAttribute('data-us-style')
-          || 'default']
-      , currentDuration =
-          current.getAttribute('data-us-hide-duration')
-          || current.getAttribute('data-us-duration')
-          || container.getAttribute('data-us-hide-duration')
-          || container.getAttribute('data-us-duration')
-      , nextDuration =
-          next.getAttribute('data-us-show-duration')
-          || next.getAttribute('data-us-duration')
-          || container.getAttribute('data-us-show-duration')
-          || container.getAttribute('data-us-duration')
-      , currentDelay =
-          current.getAttribute('data-us-hide-delay')
-          || current.getAttribute('data-us-delay')
-          || container.getAttribute('data-us-hide-delay')
-          || container.getAttribute('data-us-delay')
-      , nextDelay =
-          next.getAttribute('data-us-show-delay')
-          || next.getAttribute('data-us-delay')
-          || container.getAttribute('data-us-show-delay')
-          || container.getAttribute('data-us-delay');
-    this.a(current, {
-      from: currentStyle.show,
-      to: currentStyle.previous,
+      , currentOptions = common.getOptions(current, container)
+      , nextOptions = common.getOptions(next, container)
+      , containerOptions = common.getOptions(container, container);
+      // , currentStyle = styles[getAttr(current, container, 'hide', 'style') || 'default']
+      // , nextStyle = styles[getAttr(next, container, 'show', 'style') || 'default']
+      // , currentDuration = getAttr(current, container, 'hide', 'duration')
+      // , nextDuration = getAttr(next, container, 'show', 'duration')
+      // , currentDelay = getAttr(current, container, 'hide', 'delay')
+      // , nextDelay = getAttr(next, container, 'show', 'delay')
+      // , currentEasing = getAttr(current, container, 'hide', 'easing')
+      // , nextEasing = getAttr(next, container, 'show', 'easing');
+
+    assign(currentOptions, {
+      from: styles[currentOptions.style].show,
+      to: styles[currentOptions.style].previous,
       after: () => {
         states.hide(current);
       },
-      hide: true,
-      duration: currentDuration,
-      delay:currentDelay
+      hide: true
     });
-    this.a(next, {
+    assign(nextOptions, {
+      from: styles[nextOptions.style].next,
+      to: styles[nextOptions.style].show,
       after: () => {
         states.show(next);
-      },
-      from: nextStyle.next,
-      to: nextStyle.show,
-      duration: nextDuration,
-      delay:nextDelay
+      }
     });
-    this.a(container, {
+    assign(containerOptions, {
       from: {
         height: currentHeight + 'px'
       },
@@ -137,9 +112,12 @@ class Switcher {
         size.clearHeight(container);
       },
       static: true,
-      duration: 400,
-      delay:0
-    });
+      wait: common.calculateContainerWait(currentOptions, nextOptions, containerOptions)
+    })
+
+    this.a(current, currentOptions);
+    this.a(next, nextOptions);
+    this.a(container, containerOptions);
 
     // this.el.classList.remove('us-'+states.name(current));
     // this.el.classList.add('us-'+name);
