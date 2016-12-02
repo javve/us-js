@@ -16,8 +16,8 @@ const assign = require('object-assign'),
 class USA {
   constructor(el, options) {
     this.el = el;
-    this.from = options.from;
-    this.to = options.to;
+    this.from = css.parseStyle(options.from);
+    this.to = css.parseStyle(options.to);
     this.duration = options.duration || 400;
     this.delay = options.delay || 0;
     this.before = options.before;

@@ -75,10 +75,9 @@ class Switcher {
     let currentHeight = this.currentHeight = size.height(current)
       , nextHeight = this.nextHeight = size.height(next)
       , me = this
-      , style = container.getAttribute('data-us-style') || 'default'
-      , currentStyle = styles.get(style)
-      , nextStyle = styles.get(style);
-    console.log(style, nextStyle);
+      , currentStyle = styles[current.getAttribute('data-us-style-hide') || current.getAttribute('data-us-style') || container.getAttribute('data-us-style-hide') || container.getAttribute('data-us-style') || 'default']
+      , nextStyle = styles[current.getAttribute('data-us-style-show') || next.getAttribute('data-us-style') || container.getAttribute('data-us-style-show') || container.getAttribute('data-us-style') || 'default'];
+
     this.a(current, {
       from: currentStyle.show,
       to: currentStyle.previous,
@@ -100,10 +99,10 @@ class Switcher {
     });
     this.a(container, {
       from: {
-        height: { val: currentHeight, unit: 'px' }
+        height: currentHeight + 'px'
       },
       to: {
-        height: { val: nextHeight, unit: 'px' }
+        height: nextHeight + 'px'
       },
       after: () => {
         size.clearHeight(container);

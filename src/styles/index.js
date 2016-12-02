@@ -8,9 +8,7 @@ module.exports = (() => {
     zoom2: require('./zoom2'),
     slide: require('./slide'),
     flip: require('./flip'),
-    common: require('./common')
-  };
-  return {
+    common: require('./common'),
     get: (name) => {
       let result = {};
       for (const style in STYLES[name]) {
@@ -18,5 +16,6 @@ module.exports = (() => {
       }
       return result;
     }
-  }
+  };
+  return STYLES;
 })();
