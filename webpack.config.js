@@ -5,7 +5,7 @@ module.exports = {
   output: {
     path: __dirname + '/build',
     filename: "[name].js",
-    library: 'Switcher'
+    library: 'us'
   },
   module: {
     loaders: [

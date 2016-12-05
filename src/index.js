@@ -8,50 +8,9 @@ const assign = require('object-assign'),
       css = require('./utils/css'),
       common = require('./utils/common');
 
-class Switcher {
-  constructor(id, options = {}) {
-    this.animations = [];
-    this.completedAnimations = [];
-
-    document.body.addEventListener('click', (e) => {
-      e.stopPropagation();
-      this.click(e.target);
-    });
-
-    for (let container of containers.all()) {
-      this.setInitialState(container);
-    }
-  }
-  setInitialState(container) {
-    let first = true;
-    for (let state of states.all(container)) {
-      if (first) {
-        first = false;
-      } else {
-        states.hide(state);
-      }
-    }
-  }
-  click(el) {
-    let showStates = common.parseTrigger(el.getAttribute('data-us-show'))
-      , hideStates = common.parseTrigger(el.getAttribute('data-us-hide'))
-      , container = null;
-
-    const getContainer = (o) => {
-      if (o.containerName) {
-        return document.querySelector('[data-us="'+o.containerName+'"]');
-      } else {
-        return containers.closest(el);
-      }
-    }
-
-    for (let show of showStates) {
-      this.show(show.stateName, getContainer(show));
-    }
-    for (let hide of hideStates) {
-      this.hide(hide.stateName, getContainer(hide));
-    }
-  }
+const us = {
+  _animations: [],
+  _completedAnimations: [],
   show(name, container = null) {
     if (!container) throw new Error('no container?!');
 
@@ -63,7 +22,6 @@ class Switcher {
 
     let currentHeight = this.currentHeight = size.height(current)
       , nextHeight = this.nextHeight = size.height(next)
-      , me = this
       , currentOptions = common.getOptions(current, container)
       , nextOptions = common.getOptions(next, container)
       , containerOptions = common.getOptions(container, container);
@@ -84,12 +42,8 @@ class Switcher {
       }
     });
     assign(containerOptions, {
-      from: {
-        height: currentHeight + 'px'
-      },
-      to: {
-        height: nextHeight + 'px'
-      },
+      from: { height: currentHeight + 'px' },
+      to: { height: nextHeight + 'px' },
       after: () => {
         size.clearHeight(container);
       },
@@ -100,11 +54,10 @@ class Switcher {
     this.a(current, currentOptions);
     this.a(next, nextOptions);
     this.a(container, containerOptions);
-  }
+  },
   hide(name) {
     // already hidden?
-    let current = this.current = states.current()
-      , me = this;
+    let current = this.current = states.current();
 
     let currentHeight = this.currentHeight = size.height(current)
       , nextHeight = this.nextHeight = 0;
@@ -113,32 +66,58 @@ class Switcher {
     size.height(this.el, currentHeight);
 
     this.loop();
-  }
+  },
   a(el, options) {
     let a = new USA(el, options)
-    this.animations.push(a);
-    if (!this.animating) {
+    this._animations.push(a);
+    if (!this._animating) {
       this.animate();
-      this.animating = true;
+      this._animating = true;
     }
-  }
+  },
   animate() {
-    if (this.animations.length) {
+    if (this._animations.length) {
       requestAnimationFrame(() => this.animate());
     } else {
-      this.animating = false;
+      this._animating = false;
     }
-    for (let animation of this.animations) {
+    for (let animation of this._animations) {
       let running = animation.tick()
       if (!running) {
-        this.completedAnimations.push(animation);
+        this._completedAnimations.push(animation);
       }
     }
-    while(this.completedAnimations.length) {
-      let a = this.completedAnimations.pop()
-      this.animations.splice(this.animations.indexOf(a), 1);
+    while(this._completedAnimations.length) {
+      let a = this._completedAnimations.pop()
+      this._animations.splice(this._animations.indexOf(a), 1);
     }
   }
 }
 
-module.exports = Switcher
+document.addEventListener('DOMContentLoaded', () => {
+  document.body.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const el = e.target;
+
+    let showStates = common.parseTrigger(el.getAttribute('data-us-show'))
+      , hideStates = common.parseTrigger(el.getAttribute('data-us-hide'))
+      , container = null;
+
+    const getContainer = (o) => {
+      if (o.containerName) {
+        return document.querySelector('[data-us="'+o.containerName+'"]');
+      } else {
+        return containers.closest(el);
+      }
+    }
+
+    for (let show of showStates) {
+      us.show(show.stateName, getContainer(show));
+    }
+    for (let hide of hideStates) {
+      us.hide(hide.stateName, getContainer(hide));
+    }
+  });
+}, false);
+
+module.exports = us;
