@@ -6,19 +6,26 @@ const assign = require('object-assign'),
       size = require('./utils/size'),
       easing = require('./utils/easing'),
       css = require('./utils/css'),
-      common = require('./utils/common');
+      common = require('./utils/common'),
+      loop = require('./loop');
 
 const us = {
-  _animations: [],
-  _completedAnimations: [],
   show(name, container = null) {
-    if (!container) throw new Error('no container?!');
-
     let current = states.current(container)
       , next = states.get(name, container);
 
     if (next == null || current == null) return;
     if (current == next) return;
+
+    if (window.getComputedStyle(current).display !== 'block') {
+      current.style.display = 'block';
+    }
+    if (window.getComputedStyle(next).display !== 'block') {
+      next.style.display = 'block';
+    }
+    if (window.getComputedStyle(container).display !== 'block') {
+      container.style.display = 'block';
+    }
 
     let currentHeight = this.currentHeight = size.height(current)
       , nextHeight = this.nextHeight = size.height(next)
@@ -69,28 +76,7 @@ const us = {
   },
   a(el, options) {
     let a = new USA(el, options)
-    this._animations.push(a);
-    if (!this._animating) {
-      this.animate();
-      this._animating = true;
-    }
-  },
-  animate() {
-    if (this._animations.length) {
-      requestAnimationFrame(() => this.animate());
-    } else {
-      this._animating = false;
-    }
-    for (let animation of this._animations) {
-      let running = animation.tick()
-      if (!running) {
-        this._completedAnimations.push(animation);
-      }
-    }
-    while(this._completedAnimations.length) {
-      let a = this._completedAnimations.pop()
-      this._animations.splice(this._animations.indexOf(a), 1);
-    }
+    loop.push(a);
   }
 }
 
