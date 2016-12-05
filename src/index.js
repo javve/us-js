@@ -10,25 +10,15 @@ const assign = require('object-assign'),
 
 class Switcher {
   constructor(id, options = {}) {
-    this.containers = containers(this);
     this.animations = [];
     this.completedAnimations = [];
 
-    assign(this, options);
-
-    // this.styles = {}
-    // for (const stateName of ['next', 'show', 'previous']) {
-    //   this.styles[stateName] = css.parseStyle(styles[this.style][stateName]);
-    // }
-
-    // this.el = document.getElementById(id);
     document.body.addEventListener('click', (e) => {
       e.stopPropagation();
       this.click(e.target);
     });
-    //this.el.classList.add('us-style-'+this.style);
 
-    for (let container of this.containers.all()) {
+    for (let container of containers.all()) {
       this.setInitialState(container);
     }
   }
@@ -51,7 +41,7 @@ class Switcher {
       if (o.containerName) {
         return document.querySelector('[data-us="'+o.containerName+'"]');
       } else {
-        return this.containers.closest(el);
+        return containers.closest(el);
       }
     }
 
@@ -77,14 +67,6 @@ class Switcher {
       , currentOptions = common.getOptions(current, container)
       , nextOptions = common.getOptions(next, container)
       , containerOptions = common.getOptions(container, container);
-      // , currentStyle = styles[getAttr(current, container, 'hide', 'style') || 'default']
-      // , nextStyle = styles[getAttr(next, container, 'show', 'style') || 'default']
-      // , currentDuration = getAttr(current, container, 'hide', 'duration')
-      // , nextDuration = getAttr(next, container, 'show', 'duration')
-      // , currentDelay = getAttr(current, container, 'hide', 'delay')
-      // , nextDelay = getAttr(next, container, 'show', 'delay')
-      // , currentEasing = getAttr(current, container, 'hide', 'easing')
-      // , nextEasing = getAttr(next, container, 'show', 'easing');
 
     assign(currentOptions, {
       from: styles[currentOptions.style].show,
@@ -118,20 +100,6 @@ class Switcher {
     this.a(current, currentOptions);
     this.a(next, nextOptions);
     this.a(container, containerOptions);
-
-    // this.el.classList.remove('us-'+states.name(current));
-    // this.el.classList.add('us-'+name);
-    //states.next(next);
-    //states.previous(current);
-    // size.height(container, currentHeight);
-    //
-    // this.loop(() => {
-    //   me.states.show(next);
-    //   me.states.hide(current);
-    //   me.currentStyle = null
-    //   me.nextStyle = null
-    //   size.clearHeight(container);
-    // });
   }
   hide(name) {
     // already hidden?

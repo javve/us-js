@@ -1,6 +1,6 @@
 const css = require('./utils/css');
 
-module.exports = (s) => {
+module.exports = (() => {
   const containers = {
     all() {
       let states = document.querySelectorAll('[data-us-name]')
@@ -27,4 +27,4 @@ module.exports = (s) => {
   }
 
   return containers;
-}
+})()
