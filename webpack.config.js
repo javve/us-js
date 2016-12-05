@@ -1,6 +1,6 @@
 module.exports = {
   entry: {
-    main: './src/index.js'
+    us: './src/index.js'
   },
   output: {
     path: __dirname + '/build',
@@ -9,8 +9,6 @@ module.exports = {
   },
   module: {
     loaders: [
-      { test: /\.scss$/, loaders: ["style", "css", "sass"] },
-      { test: './src/index', },
       { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
     ]
   },
