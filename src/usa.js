@@ -28,11 +28,9 @@ class USA {
     this.ended = false;
     this.current = {};
 
-    // Set defaults
     this.start()
   }
   start() {
-    // Show the item
     this.start = Date.now()
     if (!this.static) {
       css.set(this.el, STYLES.absolute);

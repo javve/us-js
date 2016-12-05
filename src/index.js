@@ -65,22 +65,49 @@ const us = {
     us.a(container, containerOptions);
   },
 
-  hide(name) {
-    // already hidden?
-    let current = this.current = states.current();
+  hide(name, container = null) {
+    let current = states.current(container)
+      , hide = states.get(name, container);
 
-    let currentHeight = this.currentHeight = size.height(current)
-      , nextHeight = this.nextHeight = 0;
+    if (hide == null || current == null) return;
+    if (current !== hide) return;
 
-    states.previous(current);
-    size.height(this.el, currentHeight);
+    if (window.getComputedStyle(current).display !== 'block') {
+      current.style.display = 'block';
+    }
+    if (window.getComputedStyle(container).display !== 'block') {
+      container.style.display = 'block';
+    }
 
-    this.loop();
+    let currentHeight = size.height(current)
+      , nextHeight = 0
+      , currentOptions = common.getOptions(current, container)
+      , containerOptions = common.getOptions(container, container);
+
+    assign(currentOptions, {
+      from: styles[currentOptions.style].show,
+      to: styles[currentOptions.style].previous,
+      after: () => {
+        states.hide(current);
+      },
+      hide: true
+    });
+    assign(containerOptions, {
+      from: { height: currentHeight + 'px' },
+      to: { height: nextHeight + 'px' },
+      after: () => {
+        size.clearHeight(container);
+      },
+      static: true,
+      wait: currentOptions.duration + currentOptions.delay
+    });
+
+    us.a(current, currentOptions);
+    us.a(container, containerOptions);
   },
 
   a(el, options) {
-    let a = new USA(el, options)
-    loop.push(a);
+    loop.push(new USA(el, options));
   }
 }
 
