@@ -7,9 +7,11 @@ const assign = require('object-assign'),
       easing = require('./utils/easing'),
       css = require('./utils/css'),
       common = require('./utils/common'),
-      loop = require('./loop');
+      loop = require('./loop'),
+      listeners = require('./utils/listeners');
 
 const us = {
+
   show(name, container = null) {
     let current = states.current(container)
       , next = states.get(name, container);
@@ -27,8 +29,8 @@ const us = {
       container.style.display = 'block';
     }
 
-    let currentHeight = this.currentHeight = size.height(current)
-      , nextHeight = this.nextHeight = size.height(next)
+    let currentHeight = size.height(current)
+      , nextHeight = size.height(next)
       , currentOptions = common.getOptions(current, container)
       , nextOptions = common.getOptions(next, container)
       , containerOptions = common.getOptions(container, container);
@@ -56,12 +58,13 @@ const us = {
       },
       static: true,
       wait: common.calculateContainerWait(currentOptions, nextOptions, containerOptions)
-    })
+    });
 
-    this.a(current, currentOptions);
-    this.a(next, nextOptions);
-    this.a(container, containerOptions);
+    us.a(current, currentOptions);
+    us.a(next, nextOptions);
+    us.a(container, containerOptions);
   },
+
   hide(name) {
     // already hidden?
     let current = this.current = states.current();
@@ -74,36 +77,11 @@ const us = {
 
     this.loop();
   },
+
   a(el, options) {
     let a = new USA(el, options)
     loop.push(a);
   }
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-  document.body.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const el = e.target;
-
-    let showStates = common.parseTrigger(el.getAttribute('data-us-show'))
-      , hideStates = common.parseTrigger(el.getAttribute('data-us-hide'))
-      , container = null;
-
-    const getContainer = (o) => {
-      if (o.containerName) {
-        return document.querySelector('[data-us="'+o.containerName+'"]');
-      } else {
-        return containers.closest(el);
-      }
-    }
-
-    for (let show of showStates) {
-      us.show(show.stateName, getContainer(show));
-    }
-    for (let hide of hideStates) {
-      us.hide(hide.stateName, getContainer(hide));
-    }
-  });
-}, false);
 
 module.exports = us;
