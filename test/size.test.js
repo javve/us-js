@@ -3,9 +3,7 @@ const expect = require('chai').expect
     , size = require('../src/utils/size.js');
 
 describe('Size', function() {
-  console.log(this);
   beforeEach(function() {
-    console.log(this);
     this.el = document.createElement('div');
     document.body.appendChild(this.el);
   });
@@ -34,7 +32,7 @@ describe('Size', function() {
   });
 
   it('should height with content', function() {
-    content = document.createElement('div');
+    let content = document.createElement('div');
     content.innerHTML = 'hej';
     this.el.appendChild(content);
     expect(size.height(this.el)).to.equal(18);
