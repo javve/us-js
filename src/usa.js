@@ -36,6 +36,10 @@ class USA {
     this.start = Date.now()
     if (!this.static) {
       css.set(this.el, STYLES.absolute);
+    } else {
+      if (window.getComputedStyle(this.el).position == 'static') {
+        this.el.style.position = 'relative';
+      }
     }
     css.set(this.el, this.from);
 
