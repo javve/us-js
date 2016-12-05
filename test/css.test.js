@@ -1,5 +1,5 @@
-expect = require('chai').expect;
-css = require('../src/utils/css.js')();
+const expect = require('chai').expect
+    , css = require('../src/utils/css.js');
 
 describe('CSS', () => {
   beforeEach(() => {

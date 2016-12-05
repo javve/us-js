@@ -1,7 +1,6 @@
-expect = require('chai').expect;
-style = require('./style.scss');
-
-size = require('../src/utils/size.js');
+const expect = require('chai').expect
+    , style = require('./style.scss')
+    , size = require('../src/utils/size.js');
 
 describe('Size', () => {
   beforeEach(() => {
