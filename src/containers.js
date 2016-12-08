@@ -23,6 +23,9 @@ module.exports = (() => {
           return containers.closest(el.parentNode);
         }
       }
+    },
+    find(name) {
+      return document.querySelector('[data-us="'+name+'"]');
     }
   }
 

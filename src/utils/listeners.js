@@ -14,7 +14,7 @@ module.exports = (() => {
 
       const getContainer = (containerName) => {
         if (containerName) {
-          return document.querySelector('[data-us="'+containerName+'"]');
+          return containers.find(containerName);
         } else {
           return containers.closest(el);
         }

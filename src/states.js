@@ -59,6 +59,26 @@ module.exports = (() => {
       //css.clear(state, s.styles.show);
       css.set(state, styles.hide);
     },
+    next(container) {
+      let all = states.all(container)
+        , index = all.indexOf(states.current(container))
+        , next = index + 1;
+      if (next < all.length) {
+        return all[next];
+      } else {
+        return all[0];
+      }
+    },
+    back(container) {
+      let all = states.all(container)
+        , index = all.indexOf(states.current(container))
+        , next = index - 1;
+      if (next > -1) {
+        return all[next];
+      } else {
+        return all[all.length - 1];
+      }
+    },
     all(container) {
       let nodes = container.childNodes
         , states = [];

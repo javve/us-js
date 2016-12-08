@@ -111,6 +111,25 @@ const us = {
     us.a(container, containerOptions);
   },
 
+  next(containerNameOrEl) {
+    let container;
+    if (typeof containerNameOrEl === 'string' || containerNameOrEl instanceof String) {
+      container = containers.find(containerNameOrEl)
+    } else {
+      container = container;
+    }
+    us.show(states.next(container));
+  },
+  back(containerNameOrEl) {
+    let container;
+    if (typeof containerNameOrEl === 'string' || containerNameOrEl instanceof String) {
+      container = containers.find(containerNameOrEl)
+    } else {
+      container = container;
+    }
+    us.show(states.back(container));
+  },
+
   a(el, options) {
     loop.push(new USA(el, options));
   }
