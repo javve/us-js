@@ -1,0 +1,18 @@
+title: UnitedStates.js
+email: jonny.stromberg@gmail.com
+description: >
+  UnitedStates.js will improve your UI workflow bigly and I don't mean
+  that in a braggadocious way.
+baseurl: "/us-js"
+url: "http://javve.com/us-js"
+twitter_username: javve
+github_username:  javve
+repository: javve/us-js
+
+permalink: pretty
+markdown: kramdown
+gems:
+ - jekyll-coffeescript
+ - jekyll-redirect-from
+
+livereload: true
