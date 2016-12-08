@@ -20,10 +20,10 @@ module.exports = (() => {
       }
 
       for (let show of showStates) {
-        us.show(show.stateName, getContainer(show));
+        us.show(show.stateName, {container: getContainer(show)});
       }
       for (let hide of hideStates) {
-        us.hide(hide.stateName, getContainer(hide));
+        us.hide(hide.stateName, {container: getContainer(hide)});
       }
     });
   }, false);

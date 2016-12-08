@@ -30,7 +30,7 @@ module.exports = (() => {
         || container.getAttribute('data-us-'+state+'-'+val+'')
         || container.getAttribute('data-us-'+val+'');
     },
-    getOptions: (el, container) => {
+    getOptions: (state, el, container) => {
       return {
         style: utils.getAttr(el, container, 'hide', 'style') || 'default',
         duration: utils.getAttr(el, container, 'hide', 'duration') || 400,

@@ -12,12 +12,12 @@ const assign = require('object-assign'),
 
 const us = {
 
-  show(name, container = null) {
-    let current = states.current(container)
+  show(name, options) {
+    let container = options.container
+      , current = states.current(container)
       , next = states.get(name, container);
 
     if (next == null || current == null) return;
-    if (current == next) return;
 
     if (window.getComputedStyle(current).display !== 'block') {
       current.style.display = 'block';
@@ -31,9 +31,9 @@ const us = {
 
     let currentHeight = size.height(current)
       , nextHeight = size.height(next)
-      , currentOptions = common.getOptions(current, container)
-      , nextOptions = common.getOptions(next, container)
-      , containerOptions = common.getOptions(container, container);
+      , currentOptions = common.getOptions('hide', current, container)
+      , nextOptions = common.getOptions('show', next, container)
+      , containerOptions = common.getOptions('', container, container);
 
     assign(currentOptions, {
       from: styles[currentOptions.style].show,
