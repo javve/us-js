@@ -5,7 +5,7 @@ module.exports = (() => {
       if (!str) {
         return [];
       }
-      let triggers = (str || '').split(',')
+      let triggers = (str || '').replace(/ /g,'').split(',')
         , results = [];
 
       for (let trigger of triggers) {

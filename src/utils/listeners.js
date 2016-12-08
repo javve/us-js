@@ -1,4 +1,5 @@
 const common = require('./common'),
+      states = require('../states'),
       containers = require('../containers');
 
 module.exports = (() => {
@@ -11,19 +12,22 @@ module.exports = (() => {
         , hideStates = common.parseTrigger(el.getAttribute('data-us-hide'))
         , container = null;
 
-      const getContainer = (o) => {
-        if (o.containerName) {
-          return document.querySelector('[data-us="'+o.containerName+'"]');
+      const getContainer = (containerName) => {
+        if (containerName) {
+          return document.querySelector('[data-us="'+containerName+'"]');
         } else {
           return containers.closest(el);
         }
       }
 
-      for (let show of showStates) {
-        us.show(show.stateName, {container: getContainer(show)});
+      for (let state of showStates) {
+        let container = getContainer(state.containerName)
+          , el = states.get(state.stateName, container);
+
+        us.show(el);
       }
-      for (let hide of hideStates) {
-        us.hide(hide.stateName, {container: getContainer(hide)});
+      for (let state of hideStates) {
+        us.hide(state);
       }
     });
   }, false);

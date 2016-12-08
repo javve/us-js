@@ -12,10 +12,15 @@ const assign = require('object-assign'),
 
 const us = {
 
-  show(name, options) {
-    let container = options.container
-      , current = states.current(container)
-      , next = states.get(name, container);
+  show(nameOrEl, options = {}) {
+    let next;
+    if (typeof nameOrEl === 'string' || nameOrEl instanceof String) {
+      // Handle name
+    } else {
+      next = nameOrEl;
+    }
+    let container = next.parentNode
+      , current = states.current(container);
 
     if (next == null || current == null) return;
 
@@ -31,9 +36,9 @@ const us = {
 
     let currentHeight = size.height(current)
       , nextHeight = size.height(next)
-      , currentOptions = common.getOptions('hide', current, container)
-      , nextOptions = common.getOptions('show', next, container)
-      , containerOptions = common.getOptions('', container, container);
+      , currentOptions = options.hide || common.getOptions('hide', current, container)
+      , nextOptions = options.show || common.getOptions('show', next, container)
+      , containerOptions = options.container || common.getOptions('', container, container);
 
     assign(currentOptions, {
       from: styles[currentOptions.style].show,
