@@ -14,7 +14,7 @@ module.exports = (() => {
 
       for (const key in style) {
         if (transformNames.indexOf(key) > -1) continue;
-        el.style[key] = css.round(style[key]);
+        el.style[key] = css.round(style[key]) + style[key].unit;
       }
     },
 
