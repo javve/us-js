@@ -1,8 +1,19 @@
 {
   "name": "us-js",
   "version": "0.0.1",
-  "description": "Toggle content nicely",
+  "description": "UnitedStates.js will improve your UI workflow bigly and I don't mean that in a braggadocious way.",
   "main": "index.js",
+  "author": {
+    "name": "Jonny Strömberg",
+    "email": "jonny.stromberg@gmail.com>",
+    "url": "http://javve.com"
+  },
+  "homepage": "http://javve.com/us-js",
+  "repository": "git://github.com/javve/us-js.git",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/javve/us-js/issues"
+  },
   "dependencies": {},
   "devDependencies": {
     "babel-cli": "^6.18.0",
@@ -23,6 +34,13 @@
   "scripts": {
     "test": "webpack-dev-server 'mocha!./test/index.js' --output-filename test.js --port 8081"
   },
-  "author": "Jonny Strömberg",
-  "license": "MIT"
+  "npmName": "us-js",
+  "npmFileMap": [
+    {
+      "basePath": "/dist/",
+      "files": [
+        "*.js"
+      ]
+    }
+  ]
 }
