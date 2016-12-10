@@ -70,9 +70,16 @@ const us = {
     us.a(container, containerOptions);
   },
 
-  hide(name, container = null) {
-    let current = states.current(container)
-      , hide = states.get(name, container);
+  hide(nameOrEl, options = null) {
+    let hide;
+    if (typeof nameOrEl === 'string' || nameOrEl instanceof String) {
+      let [containerName,stateName] = nameOrEl.split('.');
+      hide = states.get(stateName, containers.find(containerName));
+    } else {
+      hide = nameOrEl;
+    }
+    let container = hide.parentNode
+      , current = states.current(container);
 
     if (hide == null || current == null) return;
     if (current !== hide) return;
@@ -86,8 +93,8 @@ const us = {
 
     let currentHeight = size.height(current)
       , nextHeight = 0
-      , currentOptions = common.getOptions(current, container)
-      , containerOptions = common.getOptions(container, container);
+      , currentOptions = common.getOptions('hide', current, container)
+      , containerOptions = common.getOptions('', container, container);
 
     assign(currentOptions, {
       from: styles[currentOptions.style].show,

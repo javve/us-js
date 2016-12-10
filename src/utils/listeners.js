@@ -27,7 +27,10 @@ module.exports = (() => {
         us.show(el);
       }
       for (let state of hideStates) {
-        us.hide(state);
+        let container = getContainer(state.containerName)
+          , el = states.get(state.stateName, container);
+
+        us.hide(el);
       }
     });
   }, false);

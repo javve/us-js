@@ -32,10 +32,10 @@ module.exports = (() => {
     },
     getOptions: (state, el, container) => {
       return {
-        style: utils.getAttr(el, container, 'hide', 'style') || 'default',
-        duration: utils.getAttr(el, container, 'hide', 'duration') || 400,
-        delay: utils.getAttr(el, container, 'hide', 'delay') || 0,
-        easing: utils.getAttr(el, container, 'hide', 'easing')
+        style: utils.getAttr(el, container, state, 'style') || 'default',
+        duration: utils.getAttr(el, container, state, 'duration') || 400,
+        delay: utils.getAttr(el, container, state, 'delay') || 0,
+        easing: utils.getAttr(el, container, state, 'easing')
       };
     },
     calculateContainerWait: (currentOptions, nextOptions, containerOptions) => {

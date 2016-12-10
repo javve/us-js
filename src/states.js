@@ -21,7 +21,7 @@ module.exports = (() => {
           return state;
         }
       }
-      if (all.length) {
+      if (all.length && !states.isHidden(all[0])) {
         return all[0];
       } else {
         return null;
@@ -78,6 +78,9 @@ module.exports = (() => {
       } else {
         return all[all.length - 1];
       }
+    },
+    isHidden(state) {
+      return (window.getComputedStyle(state).left == '-3000px');
     },
     all(container) {
       let nodes = container.childNodes
