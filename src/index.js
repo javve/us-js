@@ -15,18 +15,17 @@ const us = {
   show(nameOrEl, options = {}) {
     let next;
     if (typeof nameOrEl === 'string' || nameOrEl instanceof String) {
-      // Handle name
+      let [containerName,stateName] = nameOrEl.split('.');
+      next = states.get(stateName, containers.find(containerName));
     } else {
       next = nameOrEl;
     }
     let container = next.parentNode
       , current = states.current(container);
 
-    if (next == null || current == null) return;
+    if (next == current) return;
+    if (next == null) return;
 
-    if (window.getComputedStyle(current).display !== 'block') {
-      current.style.display = 'block';
-    }
     if (window.getComputedStyle(next).display !== 'block') {
       next.style.display = 'block';
     }
@@ -34,20 +33,28 @@ const us = {
       container.style.display = 'block';
     }
 
-    let currentHeight = size.height(current)
-      , nextHeight = size.height(next)
-      , currentOptions = options.hide || common.getOptions('hide', current, container)
+    let currentHeight = 0;
+    if (current) {
+      if (window.getComputedStyle(current).display !== 'block') {
+        current.style.display = 'block';
+      }
+      currentHeight = size.height(current);
+      let currentOptions = options.hide || common.getOptions('hide', current, container)
+      assign(currentOptions, {
+        from: styles[currentOptions.style].show,
+        to: styles[currentOptions.style].previous,
+        after: () => {
+          states.hide(current);
+        },
+        hide: true
+      });
+      us.a(current, currentOptions);
+    }
+
+    let nextHeight = size.height(next)
       , nextOptions = options.show || common.getOptions('show', next, container)
       , containerOptions = options.container || common.getOptions('', container, container);
 
-    assign(currentOptions, {
-      from: styles[currentOptions.style].show,
-      to: styles[currentOptions.style].previous,
-      after: () => {
-        states.hide(current);
-      },
-      hide: true
-    });
     assign(nextOptions, {
       from: styles[nextOptions.style].next,
       to: styles[nextOptions.style].show,
@@ -62,10 +69,9 @@ const us = {
         size.clearHeight(container);
       },
       static: true,
-      wait: common.calculateContainerWait(currentOptions, nextOptions, containerOptions)
+      wait: 0 //common.calculateContainerWait(currentOptions, nextOptions, containerOptions)
     });
 
-    us.a(current, currentOptions);
     us.a(next, nextOptions);
     us.a(container, containerOptions);
   },
@@ -135,6 +141,10 @@ const us = {
       container = container;
     }
     us.show(states.back(container));
+  },
+
+  style(name, options) {
+    styles[name] = options;
   },
 
   a(el, options) {
