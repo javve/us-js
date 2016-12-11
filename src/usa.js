@@ -55,6 +55,7 @@ class USA {
     if (this.hide) {
       css.set(this.el, STYLES.hide);
     } else {
+      css.set(this.el, this.to);
       css.clear(this.el, STYLES.absolute);
     }
     if (this.after) {
