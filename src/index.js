@@ -13,12 +13,10 @@ const assign = require('object-assign'),
 const us = {
 
   show(nameOrEl, options = {}) {
-    let next;
+    let next = nameOrEl;
     if (typeof nameOrEl === 'string' || nameOrEl instanceof String) {
       let [containerName,stateName] = nameOrEl.split('.');
       next = states.get(stateName, containers.find(containerName));
-    } else {
-      next = nameOrEl;
     }
     let container = next.parentNode
       , current = states.current(container);
@@ -67,12 +65,10 @@ const us = {
   },
 
   hide(nameOrEl, options = null) {
-    let hide;
+    let hide = nameOrEl;
     if (typeof nameOrEl === 'string' || nameOrEl instanceof String) {
       let [containerName,stateName] = nameOrEl.split('.');
       hide = states.get(stateName, containers.find(containerName));
-    } else {
-      hide = nameOrEl;
     }
     let container = hide.parentNode
       , current = states.current(container);
