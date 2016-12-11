@@ -8,8 +8,7 @@ module.exports = (() => {
       top: { val:0, unit: '' }
     },
     hide: {
-      position: { val:'absolute', unit:'' },
-      left: { val:-3000, unit: 'px' }
+      display: { val: 'none', unit: '' }
     }
   };
 
@@ -80,7 +79,7 @@ module.exports = (() => {
       }
     },
     isHidden(state) {
-      return ((window.getComputedStyle(state).left == '-3000px') || (window.getComputedStyle(state).display == 'none'));
+      return (window.getComputedStyle(state).display == 'none');
     },
     all(container) {
       let nodes = container.childNodes

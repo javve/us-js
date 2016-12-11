@@ -6,10 +6,6 @@ const assign = require('object-assign'),
           position: { val:'absolute', unit:'' },
           left: { val:0, unit: '' },
           top: { val:0, unit: '' }
-        },
-        hide: {
-          position: { val:'absolute', unit:'' },
-          left: { val:-3000, unit: 'px' }
         }
       };
 
@@ -46,18 +42,9 @@ class USA {
     }
   }
   complete() {
-    // css.set(this.el, {
-    //   absolute: {
-    //     position: { val:'relative', unit:'' },
-    //   }
-    // });
     // Clear the set state
-    if (this.hide) {
-      css.set(this.el, STYLES.hide);
-    } else {
-      css.set(this.el, this.to);
-      css.clear(this.el, STYLES.absolute);
-    }
+    css.set(this.el, this.to);
+    css.clear(this.el, STYLES.absolute);
     if (this.after) {
       this.after()
     }
