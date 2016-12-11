@@ -80,7 +80,7 @@ module.exports = (() => {
       }
     },
     isHidden(state) {
-      return (window.getComputedStyle(state).left == '-3000px');
+      return ((window.getComputedStyle(state).left == '-3000px') || (window.getComputedStyle(state).display == 'none'));
     },
     all(container) {
       let nodes = container.childNodes
