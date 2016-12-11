@@ -7,14 +7,15 @@ module.exports = (() => {
   ];
 
   const css = {
-    set: (el, style) => {
+    set: (el, style, log = false) => {
       // Handle existing transform!
       let transformString = css.generateTransformString(style);
       el.style.transform = transformString;
 
       for (const key in style) {
         if (transformNames.indexOf(key) > -1) continue;
-        el.style[key] = css.round(style[key]) + style[key].unit;
+        if (log) console.log(style[key], css.round(style[key]))
+        el.style[key] = css.round(style[key]) + (style[key].unit || '');
       }
     },
 
