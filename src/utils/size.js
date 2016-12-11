@@ -1,5 +1,8 @@
 module.exports = {
   height(el, height) {
+    if (window.getComputedStyle(el).display !== 'block') {
+      el.style.display = 'block';
+    }
     if (height) {
       el.style.height = height+'px';
     } else {

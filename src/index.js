@@ -26,18 +26,8 @@ const us = {
     if (next == current) return;
     if (next == null) return;
 
-    if (window.getComputedStyle(next).display !== 'block') {
-      next.style.display = 'block';
-    }
-    if (window.getComputedStyle(container).display !== 'block') {
-      container.style.display = 'block';
-    }
-
     let currentHeight = 0;
     if (current) {
-      if (window.getComputedStyle(current).display !== 'block') {
-        current.style.display = 'block';
-      }
       currentHeight = size.height(current);
       let currentOptions = options.hide || common.getOptions('hide', current, container)
       assign(currentOptions, {
@@ -89,13 +79,6 @@ const us = {
 
     if (hide == null || current == null) return;
     if (current !== hide) return;
-
-    if (window.getComputedStyle(current).display !== 'block') {
-      current.style.display = 'block';
-    }
-    if (window.getComputedStyle(container).display !== 'block') {
-      container.style.display = 'block';
-    }
 
     let currentHeight = size.height(current)
       , nextHeight = 0
