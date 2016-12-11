@@ -107,21 +107,29 @@ const us = {
     us.a(container, containerOptions);
   },
 
+  toggle(nameOrEl) {
+    let state = nameOrEl;
+    if (typeof nameOrEl === 'string' || nameOrEl instanceof String) {
+      let [containerName,stateName] = nameOrEl.split('.');
+      state = states.get(stateName, containers.find(containerName));
+    }
+    if (states.isHidden(state)) {
+      us.show(state);
+    } else {
+      us.hide(state);
+    }
+  },
   next(containerNameOrEl) {
-    let container;
+    let container = containerNameOrEl;
     if (typeof containerNameOrEl === 'string' || containerNameOrEl instanceof String) {
       container = containers.find(containerNameOrEl)
-    } else {
-      container = container;
     }
     us.show(states.next(container));
   },
   back(containerNameOrEl) {
-    let container;
+    let container = containerNameOrEl;
     if (typeof containerNameOrEl === 'string' || containerNameOrEl instanceof String) {
       container = containers.find(containerNameOrEl)
-    } else {
-      container = container;
     }
     us.show(states.back(container));
   },

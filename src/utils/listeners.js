@@ -10,6 +10,7 @@ module.exports = (() => {
 
       let showStates = common.parseTrigger(el.getAttribute('data-us-show'))
         , hideStates = common.parseTrigger(el.getAttribute('data-us-hide'))
+        , toggleStates = common.parseTrigger(el.getAttribute('data-us-toggle'))
         , container = null;
 
       const getContainer = (containerName) => {
@@ -31,6 +32,12 @@ module.exports = (() => {
           , el = states.get(state.stateName, container);
 
         us.hide(el);
+      }
+      for (let state of toggleStates) {
+        let container = getContainer(state.containerName)
+          , el = states.get(state.stateName, container);
+
+        us.toggle(el);
       }
     });
   }, false);
