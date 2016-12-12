@@ -15,7 +15,12 @@ module.exports = (() => {
 
       const getContainer = (containerName) => {
         if (containerName) {
-          return containers.find(containerName);
+          let container = containers.closestWithName(el, containerName)
+          if (container) {
+            return container;
+          } else {
+            return containers.find(containerName);
+          }
         } else {
           return containers.closest(el);
         }

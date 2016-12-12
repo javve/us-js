@@ -24,6 +24,17 @@ module.exports = (() => {
         }
       }
     },
+    closestWithName(el, name) {
+      if (el.getAttribute('data-us') == name) {
+        return el.parentNode;
+      } else {
+        if (document.body === el) {
+          return null;
+        } else {
+          return containers.closest(el.parentNode);
+        }
+      }
+    },
     find(name) {
       return document.querySelector('[data-us="'+name+'"]');
     }
