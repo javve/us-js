@@ -1,6 +1,7 @@
 const assign = require('object-assign'),
       easing = require('./utils/easing'),
       css = require('./utils/css'),
+      size = require('./utils/size'),
       STYLES = {
         absolute: {
           position: { val:'absolute', unit:'' },
@@ -20,6 +21,7 @@ class USA {
     this.after = options.after;
     this.easing = options.easing || 'inOutQuad';
     this.static = options.static || false;
+    this.name = options.name; // For debugging
 
     this.ended = false;
     this.current = {};
@@ -29,6 +31,7 @@ class USA {
   start() {
     this.start = Date.now()
     if (!this.static) {
+      size.width(this.el, size.width(this.el.parentNode));
       css.set(this.el, STYLES.absolute);
     } else {
       if (window.getComputedStyle(this.el).position == 'static') {
@@ -45,6 +48,9 @@ class USA {
     // Clear the set state
     css.set(this.el, this.to);
     css.clear(this.el, STYLES.absolute);
+    if (!this.static) {
+      size.clearWidth(this.el);
+    }
     if (this.after) {
       this.after()
     }
