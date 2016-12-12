@@ -1,0 +1,28 @@
+{% assign users = "Jonny, Unn, Hillary" | split: ", " %}
+
+<div>
+  {% for user in users %}
+    <div class="user" data-us="user" data-us-style="flip">
+      <div data-us-name="view" class="user-view">
+        <div class="user-image" style="background-image:url(/us-js/assets/images/uppsala-js/{{ user | downcase }}.jpg)"></div>
+        <div class="user-content" data-us-show="user.edit">
+          {{user}}
+        </div>
+        <div class="user-edit-btn" data-us-show="user.edit">✎</div>
+      </div>
+      <div data-us-name="edit" class="user-edit">
+        <div class="user-image edit" style="background-image:url(/us-js/assets/images/uppsala-js/{{ user | downcase }}.jpg)"></div>
+        <div class="user-content" data-us-show="user.edit">
+          <label>Name</label>
+          <input value="{{user}}" />
+          <label>Bio</label>
+          <textarea></textarea>
+        </div>
+        <div class="user-save-btn" data-us-show="user.view">✔</div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<script>
+</script>

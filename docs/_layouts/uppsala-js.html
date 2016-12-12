@@ -20,7 +20,7 @@
     <meta name="author" content="Jonny Strömberg">
 
     <link rel="shortcut icon" href="{{ site.baseurl }}/assets/images/favicon.png">
-    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/style.css">
+    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/uppsala-js.css">
 
     <!-- Open graph -->
     <meta property="og:title" content="{{ site.title }}" />
@@ -37,12 +37,69 @@
     <meta property="twitter:image:src" content="{{ site.url }}/assets/images/graphics/javve-logo.png" />
 
     <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,200,300,600,700' rel='stylesheet' type='text/css'>
+    <script src="{{ site.url }}/us-js/assets/javascripts/us.js"></script>
 
 </head>
 
 <body>
 
+<div class="container" data-us="main">
   {{ content }}
+</div>
+  <button id="next">▶</button>
+  <button id="back">◀</button>
+</div>
+
+<script>
+document.onkeydown = function(e) {
+  e = e || window.event;
+  switch(e.which || e.keyCode) {
+    case 37: // left
+    us.back('main');
+    break;
+
+    case 38: // up
+    us.back('main');
+    break;
+
+    case 39: // right
+    us.next('main');
+    break;
+
+    case 40: // down
+    us.next('main');
+    break;
+    default: return;
+  }
+};
+
+document.getElementById('next').addEventListener('click', function() {
+  us.next('main');
+});
+document.getElementById('back').addEventListener('click', function() {
+  us.back('main');
+});
+
+us.style('slide2', {
+  previous: {
+    translateY: '20%',
+    scale: 0.6,
+    opacity: 0
+  },
+  next: {
+    translateY: '-20%',
+    scale: 0.6,
+    opacity: 0
+  },
+  show: {
+    translateY: '0%',
+    scale: 1,
+    opacity: 1
+  }
+});
+us.show(document.getElementById('first-slide'));
+
+</script>
 
 </body>
 </html>

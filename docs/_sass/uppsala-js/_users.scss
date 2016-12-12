@@ -1,0 +1,99 @@
+.users {
+  $space: 120px;
+
+  background-color: #eee !important;
+  perspective: 1000px;
+
+  .user {
+    margin-bottom:10px;
+  }
+
+  .user-view,
+  .user-edit {
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    text-align: left;
+    position: relative;
+  }
+  .user-view {
+    box-sizing: border-box;
+    font-size:30px;
+    line-height:$space;
+    font-weight: 100;
+    padding-left: $space;
+    .user-content {
+      padding:0 30px;
+      box-shadow: inset $space / 2 * -1 0 0 darken(#4374D9, 5%);
+    }
+  }
+  .user-edit {
+    display:none;
+    .user-content {
+      padding:30px 30px 30px $space + 30px;
+      box-shadow: inset $space / 2 * -1 0 0 darken(#49C081, 5%);
+    }
+  }
+  .user-image {
+    position:absolute;
+    top:0;
+    left:0;
+    bottom:0;
+    width:$space;
+    background-size:cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-right:20px;
+    &.edit {
+      opacity:0.3;
+    }
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    color: #bbb;
+  }
+  input,
+  textarea {
+    color:#333;
+    font-size:16px;
+    padding: 10px;
+    border-radius: 4px;
+    border: solid 1px #ddd;
+    width:70%;
+  }
+  input {
+    margin-bottom:15px;
+  }
+
+
+  .user-edit-btn,
+  .user-save-btn {
+    transition: all .2s ease-in-out;
+    position: absolute;
+    right:$space / 2;
+    top: $space / 2;
+    background-color: #49C081;
+    color:#fff;
+    width:$space / 2;
+    height:$space / 2;
+    border-radius: 50%;
+    display:block;
+    line-height:$space / 2;
+    text-align: center;
+    cursor: pointer;
+    margin-top: - $space / 2 / 2;
+    margin-right: - $space / 2 / 2;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.2);
+    font-size:20px;
+    &:hover {
+      transform: scale(1.1);
+      box-shadow: 0 7px 25px rgba(0,0,0,0.3);
+    }
+  }
+  .user-save-btn {}
+  .user-edit-btn {
+    background-color: #4374D9;
+  }
+}
