@@ -1,3 +1,6 @@
+const states = require('../states')
+    , containers = require('../containers');
+
 module.exports = (() => {
 
   const utils = {
@@ -50,6 +53,48 @@ module.exports = (() => {
         wait = currentTotal - containerTotal;
       }
       return wait;
+    },
+    getArguments: (args) => {
+      let state, container, options;
+
+      if (args[0] == undefined) {
+        throw new Error('Need at least one argument');
+      } else if (args[1] == undefined && args[2] == undefined) {
+        state = args[0];
+        container = undefined;
+        options = {};
+      } else if (args[2] == undefined && args[1].nodeName) {
+        state = args[0];
+        container = args[1];
+        options = {};
+      } else if (args[2] == undefined) {
+        state = args[0];
+        container = undefined;
+        options = args[1];
+      } else {
+        state = args[0];
+        container = args[1];
+        options = args[2];
+      }
+
+      if (typeof state === 'string' || state instanceof String) {
+        if (state.split('.').length == 2) {
+          // 'containerName.stateName'
+          let [containerName,stateName] = state.split('.');
+          state = states.get(stateName, containers.find(containerName));
+          container = state.parentNode;
+        } else if (state.split('.').length == 1 && container) {
+          // 'state'
+          state = states.get(state, container);
+        } else {
+          throw new Error('Either specify state with container.state or provide container element')
+        }
+      } else {
+        if (container == undefined) {
+          container = state.parentNode;
+        }
+      }
+      return { state, container, options };
     }
   };
 

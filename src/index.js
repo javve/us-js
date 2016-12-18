@@ -11,14 +11,10 @@ const assign = require('object-assign'),
       listeners = require('./utils/listeners');
 
 const us = {
+  show() {
+    let {state, container, options} = common.getArguments(arguments);
 
-  show(nameOrEl, options = {}) {
-    let next = nameOrEl;
-    if (typeof nameOrEl === 'string' || nameOrEl instanceof String) {
-      let [containerName,stateName] = nameOrEl.split('.');
-      next = states.get(stateName, containers.find(containerName));
-    }
-    let container = next.parentNode
+    let next = state
       , current = states.current(container);
 
     if (next == current) return;
