@@ -31,7 +31,7 @@ module.exports = (() => {
         if (document.body === el) {
           return null;
         } else {
-          return containers.closest(el.parentNode);
+          return containers.closestWithName(el.parentNode, name);
         }
       }
     },

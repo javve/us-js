@@ -15,7 +15,7 @@ module.exports = (() => {
 
       const getContainer = (containerName) => {
         if (containerName) {
-          let container = containers.closestWithName(el, containerName)
+          let container = containers.closestWithName(el, containerName);
           if (container) {
             return container;
           } else {
