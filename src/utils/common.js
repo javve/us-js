@@ -57,17 +57,17 @@ module.exports = (() => {
     getArguments: (args) => {
       let state, container, options;
 
-      if (args[0] == undefined) {
+      if (args.length == 0) {
         throw new Error('Need at least one argument');
-      } else if (args[1] == undefined && args[2] == undefined) {
+      } else if (args.length == 1) {
         state = args[0];
         container = undefined;
         options = {};
-      } else if (args[2] == undefined && args[1].nodeName) {
+      } else if (args.length == 2 && args[1].nodeName) {
         state = args[0];
         container = args[1];
         options = {};
-      } else if (args[2] == undefined) {
+      } else if (args.length == 2) {
         state = args[0];
         container = undefined;
         options = args[1];
