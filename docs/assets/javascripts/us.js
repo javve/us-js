@@ -57,9 +57,9 @@ var us =
 	    size = __webpack_require__(7),
 	    easing = __webpack_require__(6),
 	    css = __webpack_require__(3),
-	    common = __webpack_require__(15),
-	    loop = __webpack_require__(16),
-	    listeners = __webpack_require__(17);
+	    common = __webpack_require__(16),
+	    loop = __webpack_require__(17),
+	    listeners = __webpack_require__(18);
 
 	// usContainer
 	//   _us:
@@ -71,19 +71,13 @@ var us =
 	// }
 
 	var us = {
-	  show: function show(nameOrEl) {
-	    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+	  show: function show() {
+	    var _common$getArguments = common.getArguments(arguments),
+	        state = _common$getArguments.state,
+	        container = _common$getArguments.container,
+	        options = _common$getArguments.options;
 
-	    var next = nameOrEl;
-	    if (typeof nameOrEl === 'string' || nameOrEl instanceof String) {
-	      var _nameOrEl$split = nameOrEl.split('.'),
-	          _nameOrEl$split2 = _slicedToArray(_nameOrEl$split, 2),
-	          containerName = _nameOrEl$split2[0],
-	          stateName = _nameOrEl$split2[1];
-
-	      next = states.get(stateName, containers.find(containerName));
-	    }
-	    var container = next.parentNode,
+	    var next = state,
 	        current = states.current(container);
 
 	    if (next == current) return;
@@ -133,10 +127,10 @@ var us =
 
 	    var hide = nameOrEl;
 	    if (typeof nameOrEl === 'string' || nameOrEl instanceof String) {
-	      var _nameOrEl$split3 = nameOrEl.split('.'),
-	          _nameOrEl$split4 = _slicedToArray(_nameOrEl$split3, 2),
-	          containerName = _nameOrEl$split4[0],
-	          stateName = _nameOrEl$split4[1];
+	      var _nameOrEl$split = nameOrEl.split('.'),
+	          _nameOrEl$split2 = _slicedToArray(_nameOrEl$split, 2),
+	          containerName = _nameOrEl$split2[0],
+	          stateName = _nameOrEl$split2[1];
 
 	      hide = states.get(stateName, containers.find(containerName));
 	    }
@@ -175,10 +169,10 @@ var us =
 	  toggle: function toggle(nameOrEl) {
 	    var state = nameOrEl;
 	    if (typeof nameOrEl === 'string' || nameOrEl instanceof String) {
-	      var _nameOrEl$split5 = nameOrEl.split('.'),
-	          _nameOrEl$split6 = _slicedToArray(_nameOrEl$split5, 2),
-	          containerName = _nameOrEl$split6[0],
-	          stateName = _nameOrEl$split6[1];
+	      var _nameOrEl$split3 = nameOrEl.split('.'),
+	          _nameOrEl$split4 = _slicedToArray(_nameOrEl$split3, 2),
+	          containerName = _nameOrEl$split4[0],
+	          stateName = _nameOrEl$split4[1];
 
 	      state = states.get(stateName, containers.find(containerName));
 	    }
@@ -653,7 +647,7 @@ var us =
 	        if (document.body === el) {
 	          return null;
 	        } else {
-	          return containers.closest(el.parentNode);
+	          return containers.closestWithName(el.parentNode, name);
 	        }
 	      }
 	    },
@@ -995,7 +989,8 @@ var us =
 	    zoom2: __webpack_require__(11),
 	    slide: __webpack_require__(12),
 	    flip: __webpack_require__(13),
-	    common: __webpack_require__(14),
+	    fade2: __webpack_require__(14),
+	    common: __webpack_require__(15),
 	    get: function get(name) {
 	      var result = {};
 	      for (var style in STYLES[name]) {
@@ -1123,6 +1118,27 @@ var us =
 	'use strict';
 
 	module.exports = {
+	  previous: {
+	    opacity: 0,
+	    translateY: '10%'
+	  },
+	  next: {
+	    opacity: 0,
+	    translateY: '-10%'
+	  },
+	  show: {
+	    opacity: 1,
+	    translateY: '0%'
+	  }
+	};
+
+/***/ },
+/* 15 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	module.exports = {
 	  hide: {
 	    position: 'absolute',
 	    top: 0,
@@ -1136,12 +1152,15 @@ var us =
 	};
 
 /***/ },
-/* 15 */
-/***/ function(module, exports) {
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+	var states = __webpack_require__(2),
+	    containers = __webpack_require__(4);
 
 	module.exports = function () {
 
@@ -1217,6 +1236,54 @@ var us =
 	        wait = currentTotal - containerTotal;
 	      }
 	      return wait;
+	    },
+	    getArguments: function getArguments(args) {
+	      var state = void 0,
+	          container = void 0,
+	          options = void 0;
+
+	      if (args[0] == undefined) {
+	        throw new Error('Need at least one argument');
+	      } else if (args[1] == undefined && args[2] == undefined) {
+	        state = args[0];
+	        container = undefined;
+	        options = {};
+	      } else if (args[2] == undefined && args[1].nodeName) {
+	        state = args[0];
+	        container = args[1];
+	        options = {};
+	      } else if (args[2] == undefined) {
+	        state = args[0];
+	        container = undefined;
+	        options = args[1];
+	      } else {
+	        state = args[0];
+	        container = args[1];
+	        options = args[2];
+	      }
+
+	      if (typeof state === 'string' || state instanceof String) {
+	        if (state.split('.').length == 2) {
+	          // 'containerName.stateName'
+	          var _state$split = state.split('.'),
+	              _state$split2 = _slicedToArray(_state$split, 2),
+	              containerName = _state$split2[0],
+	              stateName = _state$split2[1];
+
+	          state = states.get(stateName, containers.find(containerName));
+	          container = state.parentNode;
+	        } else if (state.split('.').length == 1 && container) {
+	          // 'state'
+	          state = states.get(state, container);
+	        } else {
+	          throw new Error('Either specify state with container.state or provide container element');
+	        }
+	      } else {
+	        if (container == undefined) {
+	          container = state.parentNode;
+	        }
+	      }
+	      return { state: state, container: container, options: options };
 	    }
 	  };
 
@@ -1224,7 +1291,7 @@ var us =
 	}();
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1287,12 +1354,12 @@ var us =
 	}();
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var common = __webpack_require__(15),
+	var common = __webpack_require__(16),
 	    states = __webpack_require__(2),
 	    containers = __webpack_require__(4);
 
