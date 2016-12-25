@@ -10,11 +10,19 @@ const assign = require('object-assign'),
       loop = require('./loop'),
       listeners = require('./utils/listeners');
 
+      // usContainer
+      //   _us:
+      //
+      // _queue: []
+      //
+      // show() {
+      //
+      // }
+
 const us = {
   show() {
-    let {state, container, options} = common.getArguments(arguments);
-
-    let next = state
+    let {state, container, options} = common.getArguments(arguments)
+      , next = state
       , current = states.current(container);
 
     if (next == current) return;
@@ -60,13 +68,9 @@ const us = {
     us.a(container, containerOptions);
   },
 
-  hide(nameOrEl, options = null) {
-    let hide = nameOrEl;
-    if (typeof nameOrEl === 'string' || nameOrEl instanceof String) {
-      let [containerName,stateName] = nameOrEl.split('.');
-      hide = states.get(stateName, containers.find(containerName));
-    }
-    let container = hide.parentNode
+  hide() {
+    let {state, container, options} = common.getArguments(arguments)
+      , hide = state
       , current = states.current(container);
 
     if (hide == null || current == null) return;
