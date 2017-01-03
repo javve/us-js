@@ -8,7 +8,8 @@ const assign = require('object-assign'),
       css = require('./utils/css'),
       common = require('./utils/common'),
       loop = require('./loop'),
-      listeners = require('./utils/listeners');
+      listeners = require('./utils/listeners'),
+      dom = require('./utils/dom');
 
 
 const us = {
@@ -62,22 +63,63 @@ const us = {
     us.a(container, common.getOptions(options.container));
   },
 
-  hide() {
-    let {state, container, options} = common.getArguments(arguments)
-      , current = states.current(container);
+  show(el, options = {}) {
+    if (!states.isHidden(el)) return;
 
-    if (state == null || current == null) return;
-    if (current !== state) return;
+    options.show = options.show || {};
+    options.container = options.container || {};
+    dom.wrap(el);
 
-    let currentHeight = size.height(current)
+    let container = el.parentNode
+      , currentHeight = 0
+      , nextHeight = size.height(el);
+
+    if (!options.overflow)
+      container.style.overflow = 'hidden';
+
+    assign(options.show, {
+      action: 'show',
+      el,
+      container
+    });
+
+    assign(options.container, {
+      action: 'container',
+      el: container,
+      container: container,
+      from: { height: currentHeight + 'px' },
+      to: { height: nextHeight + 'px' },
+      after: () => {
+        dom.unwrap(el);
+      },
+      isStatic: true,
+      wait: 0 //common.calculateContainerWait(currentOptions, nextOptions, containerOptions)
+    });
+
+    us.a(el, common.getOptions(options.show));
+    us.a(container, common.getOptions(options.container));
+  },
+
+  hide(el, options = {}) {
+    if (states.isHidden(el)) return;
+
+    options.hide = options.hide || {};
+    options.container = options.container || {};
+    dom.wrap(el);
+
+    let container = el.parentNode
+      , currentHeight = size.height(el)
       , nextHeight = 0;
+
+    if (!options.overflow)
+      container.style.overflow = 'hidden';
 
     assign(options.hide, {
       action: 'hide',
-      el: current,
+      el: el,
       container: container,
       after: () => {
-        states.hide(current);
+        states.hide(el);
       },
       hide: true
     });
@@ -88,13 +130,13 @@ const us = {
       from: { height: currentHeight + 'px' },
       to: { height: nextHeight + 'px' },
       after: () => {
-        size.clearHeight(container);
+        dom.unwrap(el);
       },
       isStatic: true,
       wait: 0 // currentOptions.duration + currentOptions.delay
     });
 
-    us.a(current, common.getOptions(options.hide));
+    us.a(el, common.getOptions(options.hide));
     us.a(container, common.getOptions(options.container));
   },
 
