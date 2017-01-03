@@ -94,28 +94,28 @@ describe('Common', function() {
       expect(common.getArguments([this.state])).to.deep.equal({
         state: this.state,
         container: this.state.parentNode,
-        options: {}
+        options: { show: {}, hide: {}, container: {}}
       });
     });
     it('should handle only state and container', function() {
       expect(common.getArguments([this.state, this.container])).to.deep.equal({
         state: this.state,
         container: this.container,
-        options: {}
+        options: { show: {}, hide: {}, container: {}}
       });
     });
     it('should handle only state, container and options', function() {
-      expect(common.getArguments([this.state, this.container, { from: { style: 'slide' } }])).to.deep.equal({
+      expect(common.getArguments([this.state, this.container, { show: { style: 'slide' } }])).to.deep.equal({
         state: this.state,
         container: this.container,
-        options: { from: { style: 'slide' } }
+        options: { show: { style: 'slide' }, hide: {}, container: {} }
       });
     });
     it('should handle only state and options', function() {
-      expect(common.getArguments([this.state, { from: { style: 'slide' } }])).to.deep.equal({
+      expect(common.getArguments([this.state, { show: { style: 'slide' } }])).to.deep.equal({
         state: this.state,
         container: this.state.parentNode,
-        options: { from: { style: 'slide' } }
+        options: { show: { style: 'slide' }, hide: {}, container: {} }
       });
     });
     it('should handle state as string', function() {
@@ -123,7 +123,7 @@ describe('Common', function() {
       expect(common.getArguments(['foo', this.container])).to.deep.equal({
         state: this.state,
         container: this.state.parentNode,
-        options: {}
+        options: { show: {}, hide: {}, container: {}}
       });
     });
     it('should handle state and container as string', function() {
@@ -132,8 +132,62 @@ describe('Common', function() {
       expect(common.getArguments(['bar.foo'])).to.deep.equal({
         state: this.state,
         container: this.container,
-        options: {}
+        options: { show: {}, hide: {}, container: {}}
       });
     });
+  });
+
+  describe('getOptions', function() {
+    beforeEach(function() {
+      this.container = document.createElement('div');
+      this.state = document.createElement('div');
+      document.body.appendChild(this.container);
+      this.container.appendChild(this.state);
+    });
+    it('should return default options for show', function() {
+      expect(common.getOptions({action: 'show', el: this.state, container: this.container})).to.deep.equal({
+        duration: 400,
+        delay: 0,
+        easing: 'linear',
+        from: {
+          opacity: 0
+        },
+        to: {
+          opacity: 1
+        },
+        after: undefined,
+        before: undefined,
+        isStatic: undefined
+      });
+    });
+    it('should return default options for hide', function() {
+      expect(common.getOptions({action: 'hide', el: this.state, container: this.container})).to.deep.equal({
+        duration: 400,
+        delay: 0,
+        easing: 'linear',
+        from: {
+          opacity: 1
+        },
+        to: {
+          opacity: 0
+        },
+        after: undefined,
+        before: undefined,
+        isStatic: undefined
+      });
+    });
+    it('should return default options for container', function() {
+      expect(common.getOptions({action: 'container', el: this.container, container: this.container})).to.deep.equal({
+        duration: 400,
+        delay: 0,
+        easing: 'linear',
+        from: undefined,
+        to: undefined,
+        after: undefined,
+        before: undefined,
+        isStatic: undefined
+      });
+    });
+
   });
 });

@@ -1,5 +1,6 @@
 const states = require('../states')
-    , containers = require('../containers');
+    , containers = require('../containers')
+    , styles = require('../styles');
 
 module.exports = (() => {
 
@@ -27,18 +28,34 @@ module.exports = (() => {
       }
       return results;
     },
-    getAttr: (el, container, state, val) => {
-      return el.getAttribute('data-us-'+state+'-'+val+'')
+    getAttr: (el, container, action, val) => {
+      return el.getAttribute('data-us-'+action+'-'+val+'')
         || el.getAttribute('data-us-'+val+'')
-        || container.getAttribute('data-us-'+state+'-'+val+'')
+        || container.getAttribute('data-us-'+action+'-'+val+'')
         || container.getAttribute('data-us-'+val+'');
     },
-    getOptions: (state, el, container) => {
+    getOptions: ({action, el, container, style, from, to, duration, delay, easing, after, before, isStatic} = {}) => {
+      let fromName, toName;
+      if (action == 'hide') {
+        fromName = 'show';
+        toName = 'previous';
+      } else if (action == 'show') {
+        fromName = 'next';
+        toName = 'show';
+      } else if (action == 'container') {
+        fromName = null;
+        toName = null;
+      }
+      style = style || utils.getAttr(el, container, action, 'style') || 'default';
       return {
-        style: utils.getAttr(el, container, state, 'style') || 'default',
-        duration: utils.getAttr(el, container, state, 'duration') || 400,
-        delay: utils.getAttr(el, container, state, 'delay') || 0,
-        easing: utils.getAttr(el, container, state, 'easing')
+        duration: utils.getAttr(el, container, action, 'duration') || 400,
+        delay: utils.getAttr(el, container, action, 'delay') || 0,
+        easing: utils.getAttr(el, container, action, 'easing') || 'linear',
+        from: from || styles[style][fromName],
+        to: to || styles[style][toName],
+        after,
+        before,
+        isStatic
       };
     },
     calculateContainerWait: (currentOptions, nextOptions, containerOptions) => {
@@ -94,6 +111,10 @@ module.exports = (() => {
           container = state.parentNode;
         }
       }
+      options.show = options.show || {};
+      options.hide = options.hide || {};
+      options.container = options.container || {};
+
       return { state, container, options };
     }
   };

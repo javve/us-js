@@ -20,7 +20,7 @@ class USA {
     this.before = options.before;
     this.after = options.after;
     this.easing = options.easing || 'inOutQuad';
-    this.static = options.static || false;
+    this.isStatic = options.isStatic || false;
     this.name = options.name; // For debugging
 
     this.ended = false;
@@ -30,7 +30,7 @@ class USA {
   }
   start() {
     this.start = Date.now()
-    if (!this.static) {
+    if (!this.isStatic) {
       size.width(this.el, size.width(this.el.parentNode));
       css.set(this.el, STYLES.absolute);
     } else {
@@ -48,7 +48,7 @@ class USA {
     // Clear the set state
     css.set(this.el, this.to);
     css.clear(this.el, STYLES.absolute);
-    if (!this.static) {
+    if (!this.isStatic) {
       size.clearWidth(this.el);
     }
     if (this.after) {

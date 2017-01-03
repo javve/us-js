@@ -20,6 +20,22 @@ const assign = require('object-assign'),
       // }
 
 const us = {
+
+  /*
+  options = {
+    show: {
+      from:
+      to:
+      style:
+      easing:
+      duration:
+      delay:
+    }
+    hide: {}
+    container: {}
+  }
+  */
+
   show() {
     let {state, container, options} = common.getArguments(arguments)
       , next = state
@@ -31,76 +47,80 @@ const us = {
     let currentHeight = 0;
     if (current) {
       currentHeight = size.height(current);
-      let currentOptions = options.hide || common.getOptions('hide', current, container)
-      assign(currentOptions, {
-        from: styles[currentOptions.style].show,
-        to: styles[currentOptions.style].previous,
+
+      assign(options.hide, {
+        action: 'hide',
+        el: current,
+        container: container,
         after: () => {
           states.hide(current);
-        },
-        hide: true
+        }
       });
-      us.a(current, currentOptions);
+      us.a(current, common.getOptions(options.hide));
     }
 
-    let nextHeight = size.height(next)
-      , nextOptions = options.show || common.getOptions('show', next, container)
-      , containerOptions = options.container || common.getOptions('', container, container);
+    let nextHeight = size.height(next);
 
-    assign(nextOptions, {
-      from: styles[nextOptions.style].next,
-      to: styles[nextOptions.style].show,
+    assign(options.show, {
+      action: 'show',
+      el: next,
+      container: container,
       after: () => {
         states.show(next);
       }
     });
-    assign(containerOptions, {
+
+    assign(options.container, {
+      action: 'container',
+      el: container,
+      container: container,
       from: { height: currentHeight + 'px' },
       to: { height: nextHeight + 'px' },
       after: () => {
         size.clearHeight(container);
       },
-      static: true,
+      isStatic: true,
       wait: 0 //common.calculateContainerWait(currentOptions, nextOptions, containerOptions)
     });
 
-    us.a(next, nextOptions);
-    us.a(container, containerOptions);
+    us.a(next, common.getOptions(options.show));
+    us.a(container, common.getOptions(options.container));
   },
 
   hide() {
     let {state, container, options} = common.getArguments(arguments)
-      , hide = state
       , current = states.current(container);
 
-    if (hide == null || current == null) return;
-    if (current !== hide) return;
+    if (state == null || current == null) return;
+    if (current !== state) return;
 
     let currentHeight = size.height(current)
-      , nextHeight = 0
-      , currentOptions = common.getOptions('hide', current, container)
-      , containerOptions = common.getOptions('', container, container);
+      , nextHeight = 0;
 
-    assign(currentOptions, {
-      from: styles[currentOptions.style].show,
-      to: styles[currentOptions.style].previous,
+    assign(options.hide, {
+      action: 'hide',
+      el: current,
+      container: container,
       after: () => {
         states.hide(current);
       },
       hide: true
     });
-    assign(containerOptions, {
+    assign(options.container, {
+      action: 'container',
+      el: container,
+      container: container,
       from: { height: currentHeight + 'px' },
       to: { height: nextHeight + 'px' },
       after: () => {
         size.clearHeight(container);
       },
-      static: true,
-      wait: currentOptions.duration + currentOptions.delay
+      isStatic: true,
+      wait: 0 // currentOptions.duration + currentOptions.delay
     });
 
-    us.a(current, currentOptions);
-    us.a(container, containerOptions);
+    us.a(current, common.getOptions(options.hide));
+    us.a(container, common.getOptions(options.container));
   },
 
   toggle(nameOrEl) {
