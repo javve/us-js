@@ -13,7 +13,7 @@ const assign = require('object-assign'),
 
 const us = {
 
-  show() {
+  slideTo() {
     let {state, container, options} = common.getArguments(arguments)
       , next = state
       , current = states.current(container);
@@ -115,14 +115,14 @@ const us = {
     if (typeof containerNameOrEl === 'string' || containerNameOrEl instanceof String) {
       container = containers.find(containerNameOrEl)
     }
-    us.show(states.next(container));
+    us.slideTo(states.next(container));
   },
   back(containerNameOrEl) {
     let container = containerNameOrEl;
     if (typeof containerNameOrEl === 'string' || containerNameOrEl instanceof String) {
       container = containers.find(containerNameOrEl)
     }
-    us.show(states.back(container));
+    us.slideTo(states.back(container));
   },
 
   style(name, options) {

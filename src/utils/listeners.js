@@ -8,7 +8,8 @@ module.exports = (() => {
       e.stopPropagation();
       const el = e.target;
 
-      let showStates = common.parseTrigger(el.getAttribute('data-us-show'))
+      let slideToStates = common.parseTrigger(el.getAttribute('data-us-slide-to'))
+        , showStates = common.parseTrigger(el.getAttribute('data-us-show'))
         , hideStates = common.parseTrigger(el.getAttribute('data-us-hide'))
         , toggleStates = common.parseTrigger(el.getAttribute('data-us-toggle'))
         , container = null;
@@ -26,6 +27,12 @@ module.exports = (() => {
         }
       }
 
+      for (let state of slideToStates) {
+        let container = getContainer(state.containerName)
+          , el = states.get(state.stateName, container);
+
+        us.slideTo(el);
+      }
       for (let state of showStates) {
         let container = getContainer(state.containerName)
           , el = states.get(state.stateName, container);
