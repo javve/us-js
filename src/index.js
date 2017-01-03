@@ -10,31 +10,8 @@ const assign = require('object-assign'),
       loop = require('./loop'),
       listeners = require('./utils/listeners');
 
-      // usContainer
-      //   _us:
-      //
-      // _queue: []
-      //
-      // show() {
-      //
-      // }
 
 const us = {
-
-  /*
-  options = {
-    show: {
-      from:
-      to:
-      style:
-      easing:
-      duration:
-      delay:
-    }
-    hide: {}
-    container: {}
-  }
-  */
 
   show() {
     let {state, container, options} = common.getArguments(arguments)
@@ -44,10 +21,11 @@ const us = {
     if (next == current) return;
     if (next == null) return;
 
-    let currentHeight = 0;
+    let currentHeight = 0
+      , nextHeight = size.height(next);
+
     if (current) {
       currentHeight = size.height(current);
-
       assign(options.hide, {
         action: 'hide',
         el: current,
@@ -56,11 +34,7 @@ const us = {
           states.hide(current);
         }
       });
-      us.a(current, common.getOptions(options.hide));
     }
-
-    let nextHeight = size.height(next);
-
     assign(options.show, {
       action: 'show',
       el: next,
@@ -69,7 +43,6 @@ const us = {
         states.show(next);
       }
     });
-
     assign(options.container, {
       action: 'container',
       el: container,
@@ -83,6 +56,8 @@ const us = {
       wait: 0 //common.calculateContainerWait(currentOptions, nextOptions, containerOptions)
     });
 
+    if (current)
+      us.a(current, common.getOptions(options.hide));
     us.a(next, common.getOptions(options.show));
     us.a(container, common.getOptions(options.container));
   },
