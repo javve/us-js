@@ -189,5 +189,33 @@ describe('Common', function() {
       });
     });
 
+    it('should return prioritize hide option then general then data then default', function() {
+      this.state.setAttribute('data-us-duration', 'duration-1');
+      this.state.setAttribute('data-us-delay', 'delay-1');
+      this.state.setAttribute('data-us-easing', 'easing-1');
+      let options = common.getOptions({action: 'hide', el: this.state, container: this.container}, {
+        duration: 'duration-2',
+        delay: 'delay-2',
+        hide: {
+          duration: 'duration-3',
+        }
+      });
+
+      expect(options).to.deep.equal({
+        duration: 'duration-3',
+        delay: 'delay-2',
+        easing: 'easing-1',
+        from: {
+          opacity: 1
+        },
+        to: {
+          opacity: 0
+        },
+        after: undefined,
+        before: undefined,
+        isStatic: undefined
+      });
+    });
+
   });
 });

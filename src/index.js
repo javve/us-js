@@ -28,26 +28,17 @@ const us = {
     if (current) {
       currentHeight = size.height(current);
       assign(options.hide, {
-        action: 'hide',
-        el: current,
-        container: container,
         after: () => {
           states.hide(current);
         }
       });
     }
     assign(options.show, {
-      action: 'show',
-      el: next,
-      container: container,
       after: () => {
         states.show(next);
       }
     });
     assign(options.container, {
-      action: 'container',
-      el: container,
-      container: container,
       from: { height: currentHeight + 'px' },
       to: { height: nextHeight + 'px' },
       after: () => {
@@ -57,10 +48,25 @@ const us = {
       wait: 0 //common.calculateContainerWait(currentOptions, nextOptions, containerOptions)
     });
 
-    if (current)
-      us.a(current, common.getOptions(options.hide));
-    us.a(next, common.getOptions(options.show));
-    us.a(container, common.getOptions(options.container));
+    if (current) {
+      us.a(current, common.getOptions({
+        action: 'hide',
+        el: current,
+        container: container
+      }, options));
+    }
+
+    us.a(next, common.getOptions({
+      action: 'show',
+      el: next,
+      container: container
+    }, options));
+
+    us.a(container, common.getOptions({
+      action: 'container',
+      el: container,
+      container: container
+    },options.container));
   },
 
   show(el, options = {}) {
@@ -77,16 +83,7 @@ const us = {
     if (!options.overflow)
       container.style.overflow = 'hidden';
 
-    assign(options.show, {
-      action: 'show',
-      el,
-      container
-    });
-
     assign(options.container, {
-      action: 'container',
-      el: container,
-      container: container,
       from: { height: currentHeight + 'px' },
       to: { height: nextHeight + 'px' },
       after: () => {
@@ -96,8 +93,15 @@ const us = {
       wait: 0 //common.calculateContainerWait(currentOptions, nextOptions, containerOptions)
     });
 
-    us.a(el, common.getOptions(options.show));
-    us.a(container, common.getOptions(options.container));
+    us.a(el, common.getOptions({
+      action: 'show', el, container
+    }, options));
+
+    us.a(container, common.getOptions({
+      action: 'container',
+      el: container,
+      container: container
+    }, options));
   },
 
   hide(el, options = {}) {
@@ -115,18 +119,12 @@ const us = {
       container.style.overflow = 'hidden';
 
     assign(options.hide, {
-      action: 'hide',
-      el: el,
-      container: container,
       after: () => {
         states.hide(el);
       },
       hide: true
     });
     assign(options.container, {
-      action: 'container',
-      el: container,
-      container: container,
       from: { height: currentHeight + 'px' },
       to: { height: nextHeight + 'px' },
       after: () => {
@@ -136,8 +134,17 @@ const us = {
       wait: 0 // currentOptions.duration + currentOptions.delay
     });
 
-    us.a(el, common.getOptions(options.hide));
-    us.a(container, common.getOptions(options.container));
+    us.a(el, common.getOptions({
+      action: 'hide',
+      el: el,
+      container: container
+    }, options));
+
+    us.a(container, common.getOptions({
+      action: 'container',
+      el: container,
+      container: container
+    }, options.container));
   },
 
   toggle(nameOrEl) {

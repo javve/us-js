@@ -34,7 +34,7 @@ module.exports = (() => {
         || container.getAttribute('data-us-'+action+'-'+val+'')
         || container.getAttribute('data-us-'+val+'');
     },
-    getOptions: ({action, el, container, style, from, to, duration, delay, easing, after, before, isStatic} = {}) => {
+    getOptions: ({action, el, container}, options = {}) => {
       let fromName, toName;
       if (action == 'hide') {
         fromName = 'show';
@@ -46,16 +46,17 @@ module.exports = (() => {
         fromName = null;
         toName = null;
       }
-      style = style || utils.getAttr(el, container, action, 'style') || 'default';
+      options[action] = options[action] || {}
+      let style = options[action].style || options.style || utils.getAttr(el, container, action, 'style') || 'default';
       return {
-        duration: utils.getAttr(el, container, action, 'duration') || 400,
-        delay: utils.getAttr(el, container, action, 'delay') || 0,
-        easing: utils.getAttr(el, container, action, 'easing') || 'linear',
-        from: from || styles[style][fromName],
-        to: to || styles[style][toName],
-        after,
-        before,
-        isStatic
+        duration: options[action].duration || options.duration || utils.getAttr(el, container, action, 'duration') || 400,
+        delay: options[action].delay || options.delay || utils.getAttr(el, container, action, 'delay') || 0,
+        easing: options[action].easing || options.easing || utils.getAttr(el, container, action, 'easing') || 'linear',
+        from: options[action].from || options.from || styles[style][fromName],
+        to: options[action].to || options.to || styles[style][toName],
+        after: options[action].after || options.after,
+        before: options[action].before || options.before,
+        isStatic: options[action].isStatic || options.isStatic
       };
     },
     calculateContainerWait: (currentOptions, nextOptions, containerOptions) => {
