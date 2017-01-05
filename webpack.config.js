@@ -1,6 +1,9 @@
+var webpack = require('webpack');
+
 module.exports = {
   entry: {
-    us: './src/index.js'
+    us: './src/index.js',
+    "us.min": './src/index.js'
   },
   output: {
     path: __dirname + '/dist',
@@ -16,4 +19,10 @@ module.exports = {
   devServer: {
     inline: true
   },
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin({
+      include: /\.min\.js$/,
+      minimize: true
+    })
+  ]
 };
