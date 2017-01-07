@@ -80,7 +80,7 @@ const us = {
       , currentHeight = 0
       , nextHeight = size.height(el);
 
-    if (!options.overflow)
+    if (options.overflow !== true)
       container.style.overflow = 'hidden';
 
     assign(options.container, {
@@ -115,7 +115,7 @@ const us = {
       , currentHeight = size.height(el)
       , nextHeight = 0;
 
-    if (!options.overflow)
+    if (options.overflow !== true)
       container.style.overflow = 'hidden';
 
     assign(options.hide, {
