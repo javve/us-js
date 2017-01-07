@@ -159,21 +159,6 @@ const us = {
       us.hide(state, options);
     }
   },
-  next(containerNameOrEl) {
-    let container = containerNameOrEl;
-    if (typeof containerNameOrEl === 'string' || containerNameOrEl instanceof String) {
-      container = containers.find(containerNameOrEl)
-    }
-    us.slideTo(states.next(container));
-  },
-  back(containerNameOrEl) {
-    let container = containerNameOrEl;
-    if (typeof containerNameOrEl === 'string' || containerNameOrEl instanceof String) {
-      container = containers.find(containerNameOrEl)
-    }
-    us.slideTo(states.back(container));
-  },
-
   style(name, options) {
     styles[name] = options;
   },
