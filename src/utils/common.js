@@ -49,7 +49,7 @@ module.exports = (() => {
       options[action] = options[action] || {}
       let style = options[action].style || options.style || utils.getAttr(el, container, action, 'style') || 'default';
       return {
-        duration: options[action].duration || options.duration || utils.getAttr(el, container, action, 'duration') || 400,
+        duration: options[action].duration || options.duration || utils.getAttr(el, container, action, 'duration') || 300,
         delay: options[action].delay || options.delay || utils.getAttr(el, container, action, 'delay') || 0,
         easing: options[action].easing || options.easing || utils.getAttr(el, container, action, 'easing') || 'linear',
         from: options[action].from || options.from || styles[style][fromName],
