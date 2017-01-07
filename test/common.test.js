@@ -146,7 +146,7 @@ describe('Common', function() {
     });
     it('should return default options for show', function() {
       expect(common.getOptions({action: 'show', el: this.state, container: this.container})).to.deep.equal({
-        duration: 400,
+        duration: 300,
         delay: 0,
         easing: 'linear',
         from: {
@@ -162,7 +162,7 @@ describe('Common', function() {
     });
     it('should return default options for hide', function() {
       expect(common.getOptions({action: 'hide', el: this.state, container: this.container})).to.deep.equal({
-        duration: 400,
+        duration: 300,
         delay: 0,
         easing: 'linear',
         from: {
@@ -178,7 +178,7 @@ describe('Common', function() {
     });
     it('should return default options for container', function() {
       expect(common.getOptions({action: 'container', el: this.container, container: this.container})).to.deep.equal({
-        duration: 400,
+        duration: 300,
         delay: 0,
         easing: 'linear',
         from: undefined,
