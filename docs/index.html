@@ -1,6 +1,144 @@
----
-layout: default
-title: UnitedStates.js
----
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>US.js - Keep posted! 🇺🇸</title>
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,200,300,600,700' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" href="/us-js/assets/images/favicon.png">
+    <meta property="og:image" content="https://media.giphy.com/media/mfdzwfwFTtSGk/giphy.gif" />
+    <meta name="viewport" content="width=device-width">
+    <style>
+      body {
+        background-color: #00395E;
+        font-family:source sans pro;
+        overflow:hidden;
+      }
+      .newsletter {
+        background: url(https://media.giphy.com/media/mfdzwfwFTtSGk/giphy.gif) no-repeat;
+        background-size: cover;
+        color: #fff;
+        position: absolute;
+        top: -100px;
+        left: 0;
+        bottom:-100px;
+        right:0;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        display: flex;
+        padding: 0 20px;
+        box-sizing: border-box;
+      }
+      .newsletter-content {
+        max-width: 600px;
+        margin:0 auto;
+        background-color: rgba(0, 57, 94, 0.84);
+        padding: 60px 40px;
+        border-radius: 5px;
+      }
+      .newsletter-title {
+        font-weight: 700;
+        color: #fff;
+        font-size: 23px;
+        font-size: 2.3rem;
+        margin: 0;
+        margin-bottom: 30px;
+        display: inline-block;
+        line-height: 1.1;
+      }
+      .newsletter-title:after {
+        display: block;
+        height: 6px;
+        background-color: #B53037;
+        content: " ";
+        border-radius: 3px;
+        margin-top:9px;
+      }
+      .newsletter-description {
+        font-size:16px;
+        opacity: 0.5;
+      }
+      .newsletter-form {
+        position: relative;
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        max-width: 570px;
+      }
+      .newsletter-email {
+        font-size:16px;
+        background: #fff;
+        border: none;
+        padding: 0 15px;
+        height:50px;
+        line-height: 50px;
+        width: 100%;
+        position: relative;
+        z-index: 1;
+        box-sizing: border-box;
+      }
+      .newsletter-email {
+        outline:none;
+      }
+      .newsletter-submit {
+        transition: all .2s ease-in-out;
+        font-size:16px;
+        background-color: #b53036;
+        border: none;
+        height: 50px;
+        line-height: 50px;
+        padding: 0 20px;
+        color: #fff;
+        font-weight: 600;
+        width:100%;
+      }
 
-wow haha yes
+      .newsletter-links {
+        font-weight: 700;
+        color: #fff;
+        font-size: 16px;
+        margin: 20px 0 0;
+        display: inline-block;
+        line-height: 1.1;
+        text-align: center;
+      }
+      .newsletter-links a {
+        transition: color .2s ease-in-out;
+        color:#fff;
+        text-decoration: none;
+      }
+      .newsletter-links a:hover {
+        opacity: 0.8;
+      }
+      @media (min-width: 900px) {
+        .newsletter-submit {
+          position: absolute;
+          right: 0;
+          top: 0;
+          z-index: 2;
+          width: auto;
+        }
+        .newsletter-submit:hover {
+          box-shadow: 0 4px 40px rgba(0,0,0,.5);
+          transform: scale(1.1);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="newsletter">
+      <div class="newsletter-content">
+        <h2 class="newsletter-title"><a id="newsletter"></a>Get notified when US.js is released!</h2>
+        <form action="//javve.us14.list-manage.com/subscribe/post?u=5c29f409148ab64294c50afb1&amp;id=6d405cc6ff" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="newsletter-form" target="_blank" novalidate>
+          <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_5c29f409148ab64294c50afb1_6d405cc6ff" tabindex="-1" value=""></div>
+          <input type="email" value="" placeholder="E-mail address" name="EMAIL" class="newsletter-email" id="mce-EMAIL">
+          <button type="submit" name="subscribe" id="mc-embedded-subscribe" class="newsletter-submit">Go!</button>
+        </form>
+        <h3 class="newsletter-links">
+          <a href="https://github.com/javve/us-js">GitHub</a> &nbsp; &nbsp;
+          <a href="https://twitter.com/javve/">Twitter</a>
+        </h3>
+      </div>
+    </div>
+  </body>
+</html>
