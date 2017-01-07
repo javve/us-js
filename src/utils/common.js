@@ -35,25 +35,14 @@ module.exports = (() => {
         || container.getAttribute('data-us-'+val+'');
     },
     getOptions: ({action, el, container}, options = {}) => {
-      let fromName, toName;
-      if (action == 'hide') {
-        fromName = 'show';
-        toName = 'previous';
-      } else if (action == 'show') {
-        fromName = 'next';
-        toName = 'show';
-      } else if (action == 'container') {
-        fromName = null;
-        toName = null;
-      }
       options[action] = options[action] || {}
       let style = options[action].style || options.style || utils.getAttr(el, container, action, 'style') || 'default';
       return {
         duration: options[action].duration || options.duration || utils.getAttr(el, container, action, 'duration') || 300,
         delay: options[action].delay || options.delay || utils.getAttr(el, container, action, 'delay') || 0,
         easing: options[action].easing || options.easing || utils.getAttr(el, container, action, 'easing') || 'linear',
-        from: options[action].from || options.from || styles[style][fromName],
-        to: options[action].to || options.to || styles[style][toName],
+        from: options[action].from || options.from || (styles[style][action] && styles[style][action].from),
+        to: options[action].to || options.to || (styles[style][action] && styles[style][action].to),
         after: options[action].after || options.after,
         before: options[action].before || options.before,
         isStatic: options[action].isStatic || options.isStatic

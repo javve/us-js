@@ -1,11 +1,18 @@
 module.exports = {
-  previous: {
-    opacity: 0
-  },
-  next: {
-    opacity: 0
-  },
   show: {
-    opacity: 1
+    from: {
+      opacity: 0
+    },
+    to: {
+      opacity: 1
+    }
+  },
+  hide: {
+    from: {
+      opacity: 1
+    },
+    to: {
+      opacity: 0
+    }
   }
 };

@@ -1,14 +1,22 @@
 module.exports = {
-  previous: {
-    translateX: '100%',
-    opacity: 0
-  },
-  next: {
-    translateX: '-100%',
-    opacity: 0
-  },
   show: {
-    translateX: '0%',
-    opacity: 1
+    from: {
+      translateX: '-100%',
+      opacity: 0
+    },
+    to: {
+      translateX: '0%',
+      opacity: 1
+    }
+  },
+  hide: {
+    from: {
+      translateX: '0%',
+      opacity: 1
+    },
+    to: {
+      translateX: '100%',
+      opacity: 0
+    }
   }
 };
