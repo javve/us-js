@@ -144,19 +144,19 @@ const us = {
       action: 'container',
       el: container,
       container: container
-    }, options.container));
+    }, options));
   },
 
-  toggle(nameOrEl) {
+  toggle(nameOrEl, options) {
     let state = nameOrEl;
     if (typeof nameOrEl === 'string' || nameOrEl instanceof String) {
       let [containerName,stateName] = nameOrEl.split('.');
       state = states.get(stateName, containers.find(containerName));
     }
     if (states.isHidden(state)) {
-      us.show(state);
+      us.show(state, options);
     } else {
-      us.hide(state);
+      us.hide(state, options);
     }
   },
   next(containerNameOrEl) {
