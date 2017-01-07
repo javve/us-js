@@ -4,12 +4,11 @@ const assign = require('object-assign'),
       USA = require('./usa'),
       styles = require('./styles'),
       size = require('./utils/size'),
-      css = require('./utils/css'),
       common = require('./utils/common'),
       loop = require('./loop'),
-      listeners = require('./utils/listeners'),
       dom = require('./utils/dom');
 
+require('./utils/listeners')
 
 const us = {
 

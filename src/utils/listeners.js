@@ -11,8 +11,7 @@ module.exports = (() => {
       let slideToStates = common.parseTrigger(el.getAttribute('data-us-slide-to'))
         , showStates = common.parseTrigger(el.getAttribute('data-us-show'))
         , hideStates = common.parseTrigger(el.getAttribute('data-us-hide'))
-        , toggleStates = common.parseTrigger(el.getAttribute('data-us-toggle'))
-        , container = null;
+        , toggleStates = common.parseTrigger(el.getAttribute('data-us-toggle'));
 
       const getContainer = (containerName) => {
         if (containerName) {

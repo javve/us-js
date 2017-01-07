@@ -1,5 +1,4 @@
-const assign = require('object-assign'),
-      easing = require('./utils/easing'),
+const easing = require('./utils/easing'),
       css = require('./utils/css'),
       size = require('./utils/size'),
       STYLES = {

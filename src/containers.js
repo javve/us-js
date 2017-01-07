@@ -1,5 +1,3 @@
-const css = require('./utils/css');
-
 module.exports = (() => {
   const containers = {
     all() {
