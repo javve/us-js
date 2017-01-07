@@ -5,7 +5,6 @@ module.exports = (() => {
   const STYLES = {
     default: require('./default'),
     zoom: require('./zoom'),
-    zoom2: require('./zoom2'),
     slide: require('./slide'),
     flip: require('./flip'),
     common: require('./common'),
