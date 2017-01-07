@@ -47,119 +47,174 @@ var us =
 
 	'use strict';
 
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 	var assign = __webpack_require__(1),
 	    states = __webpack_require__(2),
 	    containers = __webpack_require__(4),
 	    USA = __webpack_require__(5),
-	    styles = __webpack_require__(7),
-	    size = __webpack_require__(14),
-	    easing = __webpack_require__(6),
-	    css = __webpack_require__(3),
-	    common = __webpack_require__(15),
-	    loop = __webpack_require__(16),
-	    listeners = __webpack_require__(17);
+	    styles = __webpack_require__(8),
+	    size = __webpack_require__(7),
+	    common = __webpack_require__(14),
+	    loop = __webpack_require__(15),
+	    dom = __webpack_require__(16);
+
+	__webpack_require__(17);
 
 	var us = {
-	  show: function show(nameOrEl) {
-	    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-	    var next = void 0;
-	    if (typeof nameOrEl === 'string' || nameOrEl instanceof String) {
-	      // Handle name
-	    } else {
-	      next = nameOrEl;
-	    }
-	    var container = next.parentNode,
+	  slideTo: function slideTo() {
+	    var _common$getArguments = common.getArguments(arguments),
+	        state = _common$getArguments.state,
+	        container = _common$getArguments.container,
+	        options = _common$getArguments.options,
+	        next = state,
 	        current = states.current(container);
 
-	    if (next == null || current == null) return;
+	    if (next == current) return;
+	    if (next == null) return;
 
-	    if (window.getComputedStyle(current).display !== 'block') {
-	      current.style.display = 'block';
-	    }
-	    if (window.getComputedStyle(next).display !== 'block') {
-	      next.style.display = 'block';
-	    }
-	    if (window.getComputedStyle(container).display !== 'block') {
-	      container.style.display = 'block';
-	    }
+	    var currentHeight = 0,
+	        nextHeight = size.height(next);
 
-	    var currentHeight = size.height(current),
-	        nextHeight = size.height(next),
-	        currentOptions = options.hide || common.getOptions('hide', current, container),
-	        nextOptions = options.show || common.getOptions('show', next, container),
-	        containerOptions = options.container || common.getOptions('', container, container);
-
-	    assign(currentOptions, {
-	      from: styles[currentOptions.style].show,
-	      to: styles[currentOptions.style].previous,
-	      after: function after() {
-	        states.hide(current);
-	      },
-	      hide: true
-	    });
-	    assign(nextOptions, {
-	      from: styles[nextOptions.style].next,
-	      to: styles[nextOptions.style].show,
+	    if (current) {
+	      currentHeight = size.height(current);
+	      assign(options.hide, {
+	        after: function after() {
+	          states.hide(current);
+	        }
+	      });
+	    }
+	    assign(options.show, {
 	      after: function after() {
 	        states.show(next);
 	      }
 	    });
-	    assign(containerOptions, {
+	    assign(options.container, {
 	      from: { height: currentHeight + 'px' },
 	      to: { height: nextHeight + 'px' },
 	      after: function after() {
 	        size.clearHeight(container);
 	      },
-	      static: true,
-	      wait: common.calculateContainerWait(currentOptions, nextOptions, containerOptions)
+	      isStatic: true,
+	      wait: 0 //common.calculateContainerWait(currentOptions, nextOptions, containerOptions)
 	    });
 
-	    us.a(current, currentOptions);
-	    us.a(next, nextOptions);
-	    us.a(container, containerOptions);
+	    if (current) {
+	      us.a(current, common.getOptions({
+	        action: 'hide',
+	        el: current,
+	        container: container
+	      }, options));
+	    }
+
+	    us.a(next, common.getOptions({
+	      action: 'show',
+	      el: next,
+	      container: container
+	    }, options));
+
+	    us.a(container, common.getOptions({
+	      action: 'container',
+	      el: container,
+	      container: container
+	    }, options.container));
 	  },
-	  hide: function hide(name) {
-	    var container = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+	  show: function show(el) {
+	    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-	    var current = states.current(container),
-	        hide = states.get(name, container);
+	    if (!states.isHidden(el)) return;
 
-	    if (hide == null || current == null) return;
-	    if (current !== hide) return;
+	    options.show = options.show || {};
+	    options.container = options.container || {};
+	    dom.wrap(el);
 
-	    if (window.getComputedStyle(current).display !== 'block') {
-	      current.style.display = 'block';
-	    }
-	    if (window.getComputedStyle(container).display !== 'block') {
-	      container.style.display = 'block';
-	    }
+	    var container = el.parentNode,
+	        currentHeight = 0,
+	        nextHeight = size.height(el); // TODO: INCLUDE MARGINS! OK SINCE WRAP
 
-	    var currentHeight = size.height(current),
-	        nextHeight = 0,
-	        currentOptions = common.getOptions(current, container),
-	        containerOptions = common.getOptions(container, container);
+	    if (options.overflow !== true) container.style.overflow = 'hidden';
 
-	    assign(currentOptions, {
-	      from: styles[currentOptions.style].show,
-	      to: styles[currentOptions.style].previous,
+	    assign(options.container, {
+	      from: { height: currentHeight + 'px' },
+	      to: { height: nextHeight + 'px' },
 	      after: function after() {
-	        states.hide(current);
+	        dom.unwrap(el);
+	      },
+	      isStatic: true,
+	      wait: 0 //common.calculateContainerWait(currentOptions, nextOptions, containerOptions)
+	    });
+
+	    us.a(el, common.getOptions({
+	      action: 'show', el: el, container: container
+	    }, options));
+
+	    us.a(container, common.getOptions({
+	      action: 'container',
+	      el: container,
+	      container: container
+	    }, options));
+	  },
+	  hide: function hide(el) {
+	    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+	    if (states.isHidden(el)) return;
+
+	    options.hide = options.hide || {};
+	    options.container = options.container || {};
+	    dom.wrap(el);
+
+	    var container = el.parentNode,
+	        currentHeight = size.height(el),
+	        nextHeight = 0;
+
+	    if (options.overflow !== true) container.style.overflow = 'hidden';
+
+	    assign(options.hide, {
+	      after: function after() {
+	        states.hide(el);
 	      },
 	      hide: true
 	    });
-	    assign(containerOptions, {
+	    assign(options.container, {
 	      from: { height: currentHeight + 'px' },
 	      to: { height: nextHeight + 'px' },
 	      after: function after() {
-	        size.clearHeight(container);
+	        dom.unwrap(el);
 	      },
-	      static: true,
-	      wait: currentOptions.duration + currentOptions.delay
+	      isStatic: true,
+	      wait: 0 // currentOptions.duration + currentOptions.delay
 	    });
 
-	    us.a(current, currentOptions);
-	    us.a(container, containerOptions);
+	    us.a(el, common.getOptions({
+	      action: 'hide',
+	      el: el,
+	      container: container
+	    }, options));
+
+	    us.a(container, common.getOptions({
+	      action: 'container',
+	      el: container,
+	      container: container
+	    }, options));
+	  },
+	  toggle: function toggle(nameOrEl, options) {
+	    var state = nameOrEl;
+	    if (typeof nameOrEl === 'string' || nameOrEl instanceof String) {
+	      var _nameOrEl$split = nameOrEl.split('.'),
+	          _nameOrEl$split2 = _slicedToArray(_nameOrEl$split, 2),
+	          containerName = _nameOrEl$split2[0],
+	          stateName = _nameOrEl$split2[1];
+
+	      state = states.get(stateName, containers.find(containerName));
+	    }
+	    if (states.isHidden(state)) {
+	      us.show(state, options);
+	    } else {
+	      us.hide(state, options);
+	    }
+	  },
+	  style: function style(name, options) {
+	    styles[name] = options;
 	  },
 	  a: function a(el, options) {
 	    loop.push(new USA(el, options));
@@ -267,14 +322,8 @@ var us =
 
 	module.exports = function () {
 	  var styles = {
-	    absolute: {
-	      position: { val: 'absolute', unit: '' },
-	      left: { val: 0, unit: '' },
-	      top: { val: 0, unit: '' }
-	    },
 	    hide: {
-	      position: { val: 'absolute', unit: '' },
-	      left: { val: -3000, unit: 'px' }
+	      display: { val: 'none', unit: '' }
 	    }
 	  };
 
@@ -308,23 +357,12 @@ var us =
 	        }
 	      }
 
-	      if (all.length) {
+	      if (all.length && !states.isHidden(all[0])) {
 	        return all[0];
 	      } else {
 	        return null;
 	      }
 	    },
-
-	    // next(state) {
-	    //   css.set(state, styles.absolute);
-	    //   css.set(state, s.styles.next);
-	    //   s.nextStyle = JSON.parse(JSON.stringify(s.styles.next));
-	    // },
-	    // previous(state) {
-	    //   css.set(state, styles.absolute);
-	    //   css.set(state, s.styles.show);
-	    //   s.currentStyle = JSON.parse(JSON.stringify(s.styles.show));
-	    // },
 	    get: function get(name, container) {
 	      var _iteratorNormalCompletion2 = true;
 	      var _didIteratorError2 = false;
@@ -361,13 +399,15 @@ var us =
 	    show: function show(state) {
 	      //css.clear(state, styles.hide);
 	      state.classList.add('state-show');
-	      //css.set(state, styles.absolute);
 	    },
 	    hide: function hide(state) {
 	      state.classList.remove('state-show');
 	      //css.clear(state, s.styles.previous);
 	      //css.clear(state, s.styles.show);
 	      css.set(state, styles.hide);
+	    },
+	    isHidden: function isHidden(state) {
+	      return window.getComputedStyle(state).display == 'none';
 	    },
 	    all: function all(container) {
 	      var nodes = container.childNodes,
@@ -417,13 +457,16 @@ var us =
 
 	  var css = {
 	    set: function set(el, style) {
+	      var log = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
 	      // Handle existing transform!
 	      var transformString = css.generateTransformString(style);
 	      el.style.transform = transformString;
 
 	      for (var key in style) {
 	        if (transformNames.indexOf(key) > -1) continue;
-	        el.style[key] = css.round(style[key]);
+	        if (log) console.log(style[key], css.round(style[key]));
+	        el.style[key] = css.round(style[key]) + (style[key].unit || '');
 	      }
 	    },
 
@@ -525,11 +568,9 @@ var us =
 
 /***/ },
 /* 4 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	'use strict';
-
-	var css = __webpack_require__(3);
 
 	module.exports = function () {
 	  var containers = {
@@ -576,6 +617,20 @@ var us =
 	          return containers.closest(el.parentNode);
 	        }
 	      }
+	    },
+	    closestWithName: function closestWithName(el, name) {
+	      if (el.getAttribute('data-us') == name) {
+	        return el.parentNode;
+	      } else {
+	        if (document.body === el) {
+	          return null;
+	        } else {
+	          return containers.closestWithName(el.parentNode, name);
+	        }
+	      }
+	    },
+	    find: function find(name) {
+	      return document.querySelector('[data-us="' + name + '"]');
 	    }
 	  };
 
@@ -592,18 +647,14 @@ var us =
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var assign = __webpack_require__(1),
-	    easing = __webpack_require__(6),
+	var easing = __webpack_require__(6),
 	    css = __webpack_require__(3),
+	    size = __webpack_require__(7),
 	    STYLES = {
 	  absolute: {
 	    position: { val: 'absolute', unit: '' },
 	    left: { val: 0, unit: '' },
 	    top: { val: 0, unit: '' }
-	  },
-	  hide: {
-	    position: { val: 'absolute', unit: '' },
-	    left: { val: -3000, unit: 'px' }
 	  }
 	};
 
@@ -619,7 +670,8 @@ var us =
 	    this.before = options.before;
 	    this.after = options.after;
 	    this.easing = options.easing || 'inOutQuad';
-	    this.static = options.static || false;
+	    this.isStatic = options.isStatic || false;
+	    this.name = options.name; // For debugging
 
 	    this.ended = false;
 	    this.current = {};
@@ -631,7 +683,8 @@ var us =
 	    key: 'start',
 	    value: function start() {
 	      this.start = Date.now();
-	      if (!this.static) {
+	      if (!this.isStatic) {
+	        size.width(this.el, size.width(this.el.parentNode));
 	        css.set(this.el, STYLES.absolute);
 	      } else {
 	        if (window.getComputedStyle(this.el).position == 'static') {
@@ -647,16 +700,11 @@ var us =
 	  }, {
 	    key: 'complete',
 	    value: function complete() {
-	      // css.set(this.el, {
-	      //   absolute: {
-	      //     position: { val:'relative', unit:'' },
-	      //   }
-	      // });
 	      // Clear the set state
-	      if (this.hide) {
-	        css.set(this.el, STYLES.hide);
-	      } else {
-	        css.clear(this.el, STYLES.absolute);
+	      css.set(this.el, this.to);
+	      css.clear(this.el, STYLES.absolute);
+	      if (!this.isStatic) {
+	        size.clearWidth(this.el);
 	      }
 	      if (this.after) {
 	        this.after();
@@ -859,167 +907,15 @@ var us =
 
 /***/ },
 /* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var css = __webpack_require__(3);
-
-	module.exports = function () {
-	  var STYLES = {
-	    default: __webpack_require__(8),
-	    zoom: __webpack_require__(9),
-	    zoom2: __webpack_require__(10),
-	    slide: __webpack_require__(11),
-	    flip: __webpack_require__(12),
-	    common: __webpack_require__(13),
-	    get: function get(name) {
-	      var result = {};
-	      for (var style in STYLES[name]) {
-	        result[style] = css.parseStyle(STYLES[name][style]);
-	      }
-	      return result;
-	    }
-	  };
-	  return STYLES;
-	}();
-
-/***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	module.exports = {
-	  previous: {
-	    opacity: 0
-	  },
-	  next: {
-	    opacity: 0
-	  },
-	  show: {
-	    opacity: 1
-	  }
-	};
-
-/***/ },
-/* 9 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	module.exports = {
-	  previous: {
-	    scale: 1.1,
-	    opacity: 0
-	  },
-	  next: {
-	    scale: 0.8,
-	    opacity: 0
-	  },
-	  show: {
-	    scale: 1,
-	    opacity: 1
-	  }
-	};
-
-/***/ },
-/* 10 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	module.exports = {
-	  options: {
-	    easing: 'linear',
-	    duration: 200
-	  },
-	  previous: {
-	    scale: 2,
-	    opacity: 0
-	  },
-	  next: {
-	    scale: 0.8,
-	    opacity: 0
-	  },
-	  show: {
-	    scale: 1,
-	    opacity: 1
-	  }
-	};
-
-/***/ },
-/* 11 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	module.exports = {
-	  previous: {
-	    translateX: '100%',
-	    opacity: 0
-	  },
-	  next: {
-	    translateX: '-100%',
-	    opacity: 0
-	  },
-	  show: {
-	    translateX: '0%',
-	    opacity: 1
-	  }
-	};
-
-/***/ },
-/* 12 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	module.exports = {
-	  options: {
-	    duration: 1000
-	  },
-	  previous: {
-	    rotateX: '180deg',
-	    opacity: 0
-	  },
-	  next: {
-	    rotateX: '-180deg',
-	    opacity: 0
-	  },
-	  show: {
-	    rotateX: '0deg',
-	    opacity: 1
-	  }
-	};
-
-/***/ },
-/* 13 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	module.exports = {
-	  hide: {
-	    position: 'absolute',
-	    top: 0,
-	    left: '-3000px'
-	  },
-	  absolute: {
-	    position: 'absolute',
-	    top: 0,
-	    left: 0
-	  }
-	};
-
-/***/ },
-/* 14 */
 /***/ function(module, exports) {
 
 	'use strict';
 
 	module.exports = {
 	  height: function height(el, _height) {
+	    if (window.getComputedStyle(el).display !== 'block') {
+	      el.style.display = 'block';
+	    }
 	    if (_height) {
 	      el.style.height = _height + 'px';
 	    } else {
@@ -1056,12 +952,173 @@ var us =
 	};
 
 /***/ },
-/* 15 */
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var css = __webpack_require__(3);
+
+	module.exports = function () {
+	  var STYLES = {
+	    default: __webpack_require__(9),
+	    zoom: __webpack_require__(10),
+	    slide: __webpack_require__(11),
+	    flip: __webpack_require__(12),
+	    common: __webpack_require__(13),
+	    get: function get(name) {
+	      var result = {};
+	      for (var style in STYLES[name]) {
+	        result[style] = css.parseStyle(STYLES[name][style]);
+	      }
+	      return result;
+	    }
+	  };
+	  return STYLES;
+	}();
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	module.exports = {
+	  show: {
+	    from: {
+	      opacity: 0
+	    },
+	    to: {
+	      opacity: 1
+	    }
+	  },
+	  hide: {
+	    from: {
+	      opacity: 1
+	    },
+	    to: {
+	      opacity: 0
+	    }
+	  }
+	};
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	module.exports = {
+	  show: {
+	    from: {
+	      scale: 0.8,
+	      opacity: 0
+	    },
+	    to: {
+	      scale: 1,
+	      opacity: 1
+	    }
+	  },
+	  hide: {
+	    from: {
+	      scale: 1,
+	      opacity: 1
+	    },
+	    to: {
+	      scale: 1.1,
+	      opacity: 0
+	    }
+	  }
+	};
+
+/***/ },
+/* 11 */
 /***/ function(module, exports) {
 
 	'use strict';
 
+	module.exports = {
+	  show: {
+	    from: {
+	      translateX: '-100%',
+	      opacity: 0
+	    },
+	    to: {
+	      translateX: '0%',
+	      opacity: 1
+	    }
+	  },
+	  hide: {
+	    from: {
+	      translateX: '0%',
+	      opacity: 1
+	    },
+	    to: {
+	      translateX: '100%',
+	      opacity: 0
+	    }
+	  }
+	};
+
+/***/ },
+/* 12 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	module.exports = {
+	  show: {
+	    from: {
+	      rotateX: '-180deg',
+	      opacity: 0
+	    },
+	    to: {
+	      rotateX: '0deg',
+	      opacity: 1
+	    }
+	  },
+	  hide: {
+	    from: {
+	      rotateX: '0deg',
+	      opacity: 1
+	    },
+	    to: {
+	      rotateX: '180deg',
+	      opacity: 0
+	    }
+	  }
+	};
+
+/***/ },
+/* 13 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	module.exports = {
+	  hide: {
+	    position: 'absolute',
+	    top: 0,
+	    left: '-3000px'
+	  },
+	  absolute: {
+	    position: 'absolute',
+	    top: 0,
+	    left: 0
+	  }
+	};
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
 	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+	var states = __webpack_require__(2),
+	    containers = __webpack_require__(4),
+	    styles = __webpack_require__(8);
 
 	module.exports = function () {
 
@@ -1114,15 +1171,26 @@ var us =
 
 	      return results;
 	    },
-	    getAttr: function getAttr(el, container, state, val) {
-	      return el.getAttribute('data-us-' + state + '-' + val + '') || el.getAttribute('data-us-' + val + '') || container.getAttribute('data-us-' + state + '-' + val + '') || container.getAttribute('data-us-' + val + '');
+	    getAttr: function getAttr(el, container, action, val) {
+	      return el.getAttribute('data-us-' + action + '-' + val + '') || el.getAttribute('data-us-' + val + '') || container.getAttribute('data-us-' + action + '-' + val + '') || container.getAttribute('data-us-' + val + '');
 	    },
-	    getOptions: function getOptions(state, el, container) {
+	    getOptions: function getOptions(_ref) {
+	      var action = _ref.action,
+	          el = _ref.el,
+	          container = _ref.container;
+	      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+	      options[action] = options[action] || {};
+	      var style = options[action].style || options.style || utils.getAttr(el, container, action, 'style') || 'default';
 	      return {
-	        style: utils.getAttr(el, container, 'hide', 'style') || 'default',
-	        duration: utils.getAttr(el, container, 'hide', 'duration') || 400,
-	        delay: utils.getAttr(el, container, 'hide', 'delay') || 0,
-	        easing: utils.getAttr(el, container, 'hide', 'easing')
+	        duration: options[action].duration || options.duration || utils.getAttr(el, container, action, 'duration') || 300,
+	        delay: options[action].delay || options.delay || utils.getAttr(el, container, action, 'delay') || 0,
+	        easing: options[action].easing || options.easing || utils.getAttr(el, container, action, 'easing') || 'linear',
+	        from: options[action].from || options.from || styles[style][action] && styles[style][action].from,
+	        to: options[action].to || options.to || styles[style][action] && styles[style][action].to,
+	        after: options[action].after || options.after,
+	        before: options[action].before || options.before,
+	        isStatic: options[action].isStatic || options.isStatic
 	      };
 	    },
 	    calculateContainerWait: function calculateContainerWait(currentOptions, nextOptions, containerOptions) {
@@ -1137,6 +1205,58 @@ var us =
 	        wait = currentTotal - containerTotal;
 	      }
 	      return wait;
+	    },
+	    getArguments: function getArguments(args) {
+	      var state = void 0,
+	          container = void 0,
+	          options = void 0;
+
+	      if (args.length == 0) {
+	        throw new Error('Need at least one argument');
+	      } else if (args.length == 1) {
+	        state = args[0];
+	        container = undefined;
+	        options = {};
+	      } else if (args.length == 2 && args[1].nodeName) {
+	        state = args[0];
+	        container = args[1];
+	        options = {};
+	      } else if (args.length == 2) {
+	        state = args[0];
+	        container = undefined;
+	        options = args[1];
+	      } else {
+	        state = args[0];
+	        container = args[1];
+	        options = args[2];
+	      }
+
+	      if (typeof state === 'string' || state instanceof String) {
+	        if (state.split('.').length == 2) {
+	          // 'containerName.stateName'
+	          var _state$split = state.split('.'),
+	              _state$split2 = _slicedToArray(_state$split, 2),
+	              containerName = _state$split2[0],
+	              stateName = _state$split2[1];
+
+	          state = states.get(stateName, containers.find(containerName));
+	          container = state.parentNode;
+	        } else if (state.split('.').length == 1 && container) {
+	          // 'state'
+	          state = states.get(state, container);
+	        } else {
+	          throw new Error('Either specify state with container.state or provide container element');
+	        }
+	      } else {
+	        if (container == undefined) {
+	          container = state.parentNode;
+	        }
+	      }
+	      options.show = options.show || {};
+	      options.hide = options.hide || {};
+	      options.container = options.container || {};
+
+	      return { state: state, container: container, options: options };
 	    }
 	  };
 
@@ -1144,7 +1264,7 @@ var us =
 	}();
 
 /***/ },
-/* 16 */
+/* 15 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1207,12 +1327,34 @@ var us =
 	}();
 
 /***/ },
+/* 16 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	module.exports = {
+	  wrap: function wrap(el) {
+	    var div = document.createElement('div');
+	    el.parentNode.insertBefore(div, el);
+	    div.appendChild(el);
+	    return el;
+	  },
+	  unwrap: function unwrap(el) {
+	    var container = el.parentNode,
+	        parentsParent = container.parentNode;
+	    parentsParent.insertBefore(el, container);
+	    parentsParent.removeChild(container);
+	    return el;
+	  }
+	};
+
+/***/ },
 /* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var common = __webpack_require__(15),
+	var common = __webpack_require__(14),
 	    states = __webpack_require__(2),
 	    containers = __webpack_require__(4);
 
@@ -1222,13 +1364,19 @@ var us =
 	      e.stopPropagation();
 	      var el = e.target;
 
-	      var showStates = common.parseTrigger(el.getAttribute('data-us-show')),
+	      var slideToStates = common.parseTrigger(el.getAttribute('data-us-slide-to')),
+	          showStates = common.parseTrigger(el.getAttribute('data-us-show')),
 	          hideStates = common.parseTrigger(el.getAttribute('data-us-hide')),
-	          container = null;
+	          toggleStates = common.parseTrigger(el.getAttribute('data-us-toggle'));
 
 	      var getContainer = function getContainer(containerName) {
 	        if (containerName) {
-	          return document.querySelector('[data-us="' + containerName + '"]');
+	          var container = containers.closestWithName(el, containerName);
+	          if (container) {
+	            return container;
+	          } else {
+	            return containers.find(containerName);
+	          }
 	        } else {
 	          return containers.closest(el);
 	        }
@@ -1239,13 +1387,13 @@ var us =
 	      var _iteratorError = undefined;
 
 	      try {
-	        for (var _iterator = showStates[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	        for (var _iterator = slideToStates[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 	          var state = _step.value;
 
-	          var _container = getContainer(state.containerName),
-	              _el = states.get(state.stateName, _container);
+	          var container = getContainer(state.containerName),
+	              _el = states.get(state.stateName, container);
 
-	          us.show(_el);
+	          us.slideTo(_el);
 	        }
 	      } catch (err) {
 	        _didIteratorError = true;
@@ -1267,10 +1415,13 @@ var us =
 	      var _iteratorError2 = undefined;
 
 	      try {
-	        for (var _iterator2 = hideStates[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	        for (var _iterator2 = showStates[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
 	          var _state = _step2.value;
 
-	          us.hide(_state);
+	          var _container = getContainer(_state.containerName),
+	              _el2 = states.get(_state.stateName, _container);
+
+	          us.show(_el2);
 	        }
 	      } catch (err) {
 	        _didIteratorError2 = true;
@@ -1283,6 +1434,62 @@ var us =
 	        } finally {
 	          if (_didIteratorError2) {
 	            throw _iteratorError2;
+	          }
+	        }
+	      }
+
+	      var _iteratorNormalCompletion3 = true;
+	      var _didIteratorError3 = false;
+	      var _iteratorError3 = undefined;
+
+	      try {
+	        for (var _iterator3 = hideStates[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	          var _state2 = _step3.value;
+
+	          var _container2 = getContainer(_state2.containerName),
+	              _el3 = states.get(_state2.stateName, _container2);
+
+	          us.hide(_el3);
+	        }
+	      } catch (err) {
+	        _didIteratorError3 = true;
+	        _iteratorError3 = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	            _iterator3.return();
+	          }
+	        } finally {
+	          if (_didIteratorError3) {
+	            throw _iteratorError3;
+	          }
+	        }
+	      }
+
+	      var _iteratorNormalCompletion4 = true;
+	      var _didIteratorError4 = false;
+	      var _iteratorError4 = undefined;
+
+	      try {
+	        for (var _iterator4 = toggleStates[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+	          var _state3 = _step4.value;
+
+	          var _container3 = getContainer(_state3.containerName),
+	              _el4 = states.get(_state3.stateName, _container3);
+
+	          us.toggle(_el4);
+	        }
+	      } catch (err) {
+	        _didIteratorError4 = true;
+	        _iteratorError4 = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion4 && _iterator4.return) {
+	            _iterator4.return();
+	          }
+	        } finally {
+	          if (_didIteratorError4) {
+	            throw _iteratorError4;
 	          }
 	        }
 	      }
