@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <div class="wrapper">
+
+
+      <button id="btn">Toggle box</button>
+      <div class="box donald" id="box">
+        <img src="images/d1.jpg">
+        <h1>It’s freezing and snowing in New York – we need global warming!</h1>
+      </div>
+
+			<br><br>
+			<div class="box">
+			  <img src="images/puppy.jpg">
+			</div>
+
+
+    </div>
+    <script src="../dist/us.js"></script>
+    <script>
+			let btn = document.querySelector('#btn')
+				, box = document.querySelector('#box');
+
+			btn.addEventListener('click', function(e) {
+				// Ex 1
+				us.toggle(box);
+
+				// // Ex 2
+				// if (window.getComputedStyle(box).display == 'none') {
+				//   us.show(box, {duration:500, easing: 'outBack'});
+				// } else {
+				//   us.hide(box, {style:'slide', duration:400, easing: 'inOutQuad'});
+				// }
+				//
+				// // Ex 3
+				// us.toggle(box, {
+				//   overflow:true,
+				//   duration: 300,
+				//   style:'flip2',
+				//   easing:'inOutQuad'
+				// });
+				//
+				// // Ex 4
+				// us.toggle(box, {
+				//   duration: 200,
+				//   overflow:true,
+				//   style: 'fade3'
+				// });
+			});
+
+
+			us.style('flip2',{
+				show: {
+					from: {
+						rotateX: '-100deg',
+						opacity: 0
+					},
+					to: {
+						rotateX: '0deg',
+						opacity: 1
+					}
+				},
+				hide: {
+					from: {
+						rotateX: '0deg',
+						opacity: 1
+					},
+					to: {
+						rotateX: '-100deg',
+						opacity: 0
+					}
+				}
+			});
+
+			us.style('fade3', {
+				show: {
+					from: {
+						scale: 0.9,
+						translateY: '20%',
+						opacity: 0
+					},
+					to: {
+						scale: 1,
+						translateY: '0%',
+						opacity: 1
+					}
+				},
+				hide: {
+					from: {
+						scale: 1,
+						translateY: '0%',
+						opacity: 1
+					},
+					to: {
+						translateY: '20%',
+						scale: 0.9,
+						opacity: 0
+					}
+				}
+			});
+
+		</script>
+  </body>
+</html>
