@@ -11,9 +11,18 @@ module.exports = {
     library: 'us'
   },
   module: {
-    loaders: [
-      { test: /\.scss$/, loaders: ["style", "css", "sass"] },
-      { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
+    rules: [
+      {
+        enforce: 'pre',
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: "jshint-loader"
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: "babel-loader"
+      }
     ]
   },
   devServer: {

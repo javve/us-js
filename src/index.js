@@ -76,7 +76,7 @@ const us = {
 
     let container = el.parentNode
       , currentHeight = 0
-      , nextHeight = size.height(el);
+      , nextHeight = size.height(el); // TODO: INCLUDE MARGINS! OK SINCE WRAP
 
     if (options.overflow !== true)
       container.style.overflow = 'hidden';
