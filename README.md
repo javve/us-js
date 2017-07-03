@@ -1,10 +1,8 @@
 ## Testing
-npm run test  
-http://localhost:8081/test
+npm test
 
 ## Development
-webpack-dev-server  
-http://localhost:8080
+webpack --watch
 
 ## Examples
 Check /examples
