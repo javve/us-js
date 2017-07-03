@@ -43,11 +43,11 @@ module.exports = (() => {
       css.set(state, styles.hide);
     },
     isHidden(state) {
-      return (window.getComputedStyle(state).display == 'none');
+      return window.getComputedStyle(state).display == 'none';
     },
     all(container) {
-      let nodes = container.childNodes
-        , states = [];
+      let nodes = container.childNodes,
+        states = [];
       for (let node of nodes) {
         if (node.data === undefined) {
           states.push(node);
@@ -55,7 +55,7 @@ module.exports = (() => {
       }
       return states;
     }
-  }
+  };
 
   return states;
-})()
+})();

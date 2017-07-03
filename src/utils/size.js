@@ -4,14 +4,14 @@ module.exports = {
       el.style.display = 'block';
     }
     if (height) {
-      el.style.height = height+'px';
+      el.style.height = height + 'px';
     } else {
       return el.offsetHeight;
     }
   },
   width(el, width) {
     if (width) {
-      el.style.width = width+'px';
+      el.style.width = width + 'px';
     } else {
       return el.offsetWidth;
     }
@@ -36,4 +36,4 @@ module.exports = {
     this.width(el, size.width);
     this.height(el, size.height);
   }
-}
+};

@@ -1,13 +1,15 @@
 var webpack = require('webpack');
 
+const path = require('path');
+
 module.exports = {
   entry: {
     us: './src/index.js',
-    "us.min": './src/index.js'
+    'us.min': './src/index.js'
   },
   output: {
     path: __dirname + '/dist',
-    filename: "[name].js",
+    filename: '[name].js',
     library: 'us'
   },
   module: {
@@ -16,12 +18,15 @@ module.exports = {
         enforce: 'pre',
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: "jshint-loader"
+        loader: 'eslint-loader',
+        options: {
+          fix: true,
+        }
       },
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: "babel-loader"
+        loader: 'babel-loader'
       }
     ]
   },

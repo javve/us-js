@@ -1,13 +1,13 @@
 const easing = require('./utils/easing'),
-      css = require('./utils/css'),
-      size = require('./utils/size'),
-      STYLES = {
-        absolute: {
-          position: { val:'absolute', unit:'' },
-          left: { val:0, unit: '' },
-          top: { val:0, unit: '' }
-        }
-      };
+  css = require('./utils/css'),
+  size = require('./utils/size'),
+  STYLES = {
+    absolute: {
+      position: { val: 'absolute', unit: '' },
+      left: { val: 0, unit: '' },
+      top: { val: 0, unit: '' }
+    }
+  };
 
 class USA {
   constructor(el, options) {
@@ -25,10 +25,10 @@ class USA {
     this.ended = false;
     this.current = {};
 
-    this.start()
+    this.start();
   }
   start() {
-    this.start = Date.now()
+    this.start = Date.now();
     if (!this.isStatic) {
       size.width(this.el, size.width(this.el.parentNode));
       css.set(this.el, STYLES.absolute);
@@ -40,7 +40,7 @@ class USA {
     css.set(this.el, this.from);
 
     if (this.before) {
-      this.before()
+      this.before();
     }
   }
   complete() {
@@ -51,28 +51,27 @@ class USA {
       size.clearWidth(this.el);
     }
     if (this.after) {
-      this.after()
+      this.after();
     }
   }
   tick() {
     let now = Date.now();
 
-    if ((now - this.start) < this.delay) return true;
+    if (now - this.start < this.delay) return true;
 
-    let p = (now - this.delay - this.start) / this.duration
-      , val = easing[this.easing](p);
+    let p = (now - this.delay - this.start) / this.duration,
+      val = easing[this.easing](p);
 
-    if (now - this.start >= (this.duration + this.delay)) {
+    if (now - this.start >= this.duration + this.delay) {
       this.complete();
       return false;
     }
 
-
     for (const key in this.to) {
-      let start = this.from[key].val
-      let goal = this.to[key].val
-      this.current[key] = this.current[key] || {}
-      this.current[key].val = (start + (goal - start) * val);
+      let start = this.from[key].val;
+      let goal = this.to[key].val;
+      this.current[key] = this.current[key] || {};
+      this.current[key].val = start + (goal - start) * val;
       this.current[key].unit = this.from[key].unit;
     }
     css.set(this.el, this.current);

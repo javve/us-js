@@ -1,27 +1,26 @@
 const assign = require('object-assign'),
-      states = require('./states'),
-      containers = require('./containers'),
-      USA = require('./usa'),
-      styles = require('./styles'),
-      size = require('./utils/size'),
-      common = require('./utils/common'),
-      loop = require('./loop'),
-      dom = require('./utils/dom');
+  states = require('./states'),
+  containers = require('./containers'),
+  USA = require('./usa'),
+  styles = require('./styles'),
+  size = require('./utils/size'),
+  common = require('./utils/common'),
+  loop = require('./loop'),
+  dom = require('./utils/dom');
 
-require('./utils/listeners')
+require('./utils/listeners');
 
 const us = {
-
   slideTo() {
-    let {state, container, options} = common.getArguments(arguments)
-      , next = state
-      , current = states.current(container);
+    let { state, container, options } = common.getArguments(arguments),
+      next = state,
+      current = states.current(container);
 
     if (next == current) return;
     if (next == null) return;
 
-    let currentHeight = 0
-      , nextHeight = size.height(next);
+    let currentHeight = 0,
+      nextHeight = size.height(next);
 
     if (current) {
       currentHeight = size.height(current);
@@ -47,24 +46,42 @@ const us = {
     });
 
     if (current) {
-      us.a(current, common.getOptions({
-        action: 'hide',
-        el: current,
-        container: container
-      }, options));
+      us.a(
+        current,
+        common.getOptions(
+          {
+            action: 'hide',
+            el: current,
+            container: container
+          },
+          options
+        )
+      );
     }
 
-    us.a(next, common.getOptions({
-      action: 'show',
-      el: next,
-      container: container
-    }, options));
+    us.a(
+      next,
+      common.getOptions(
+        {
+          action: 'show',
+          el: next,
+          container: container
+        },
+        options
+      )
+    );
 
-    us.a(container, common.getOptions({
-      action: 'container',
-      el: container,
-      container: container
-    },options.container));
+    us.a(
+      container,
+      common.getOptions(
+        {
+          action: 'container',
+          el: container,
+          container: container
+        },
+        options.container
+      )
+    );
   },
 
   show(el, options = {}) {
@@ -74,12 +91,11 @@ const us = {
     options.container = options.container || {};
     dom.wrap(el);
 
-    let container = el.parentNode
-      , currentHeight = 0
-      , nextHeight = size.height(el); // TODO: INCLUDE MARGINS! OK SINCE WRAP
+    let container = el.parentNode,
+      currentHeight = 0,
+      nextHeight = size.height(el); // TODO: INCLUDE MARGINS! OK SINCE WRAP
 
-    if (options.overflow !== true)
-      container.style.overflow = 'hidden';
+    if (options.overflow !== true) container.style.overflow = 'hidden';
 
     assign(options.container, {
       from: { height: currentHeight + 'px' },
@@ -91,15 +107,29 @@ const us = {
       wait: 0 //common.calculateContainerWait(currentOptions, nextOptions, containerOptions)
     });
 
-    us.a(el, common.getOptions({
-      action: 'show', el, container
-    }, options));
+    us.a(
+      el,
+      common.getOptions(
+        {
+          action: 'show',
+          el,
+          container
+        },
+        options
+      )
+    );
 
-    us.a(container, common.getOptions({
-      action: 'container',
-      el: container,
-      container: container
-    }, options));
+    us.a(
+      container,
+      common.getOptions(
+        {
+          action: 'container',
+          el: container,
+          container: container
+        },
+        options
+      )
+    );
   },
 
   hide(el, options = {}) {
@@ -109,12 +139,11 @@ const us = {
     options.container = options.container || {};
     dom.wrap(el);
 
-    let container = el.parentNode
-      , currentHeight = size.height(el)
-      , nextHeight = 0;
+    let container = el.parentNode,
+      currentHeight = size.height(el),
+      nextHeight = 0;
 
-    if (options.overflow !== true)
-      container.style.overflow = 'hidden';
+    if (options.overflow !== true) container.style.overflow = 'hidden';
 
     assign(options.hide, {
       after: () => {
@@ -132,23 +161,35 @@ const us = {
       wait: 0 // currentOptions.duration + currentOptions.delay
     });
 
-    us.a(el, common.getOptions({
-      action: 'hide',
-      el: el,
-      container: container
-    }, options));
+    us.a(
+      el,
+      common.getOptions(
+        {
+          action: 'hide',
+          el: el,
+          container: container
+        },
+        options
+      )
+    );
 
-    us.a(container, common.getOptions({
-      action: 'container',
-      el: container,
-      container: container
-    }, options));
+    us.a(
+      container,
+      common.getOptions(
+        {
+          action: 'container',
+          el: container,
+          container: container
+        },
+        options
+      )
+    );
   },
 
   toggle(nameOrEl, options) {
     let state = nameOrEl;
     if (typeof nameOrEl === 'string' || nameOrEl instanceof String) {
-      let [containerName,stateName] = nameOrEl.split('.');
+      let [containerName, stateName] = nameOrEl.split('.');
       state = states.get(stateName, containers.find(containerName));
     }
     if (states.isHidden(state)) {
@@ -164,6 +205,6 @@ const us = {
   a(el, options) {
     loop.push(new USA(el, options));
   }
-}
+};
 
 module.exports = us;

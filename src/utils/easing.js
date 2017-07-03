@@ -6,125 +6,151 @@ Easing equations Copyright (c) 2001 Robert Penner http://robertpenner.com/easing
 */
 
 module.exports = {
-  linear: (n) => {
+  linear: n => {
     return n;
   },
-  inQuad: (n) => {
+  inQuad: n => {
     return n * n;
   },
-  outQuad: (n) => {
+  outQuad: n => {
     return n * (2 - n);
   },
-  inOutQuad: (n) => {
+  inOutQuad: n => {
     n *= 2;
     if (n < 1) return 0.5 * n * n;
-    return - 0.5 * (--n * (n - 2) - 1);
+    return -0.5 * (--n * (n - 2) - 1);
   },
-  inCube: (n) => {
+  inCube: n => {
     return n * n * n;
   },
-  outCube: (n) => {
+  outCube: n => {
     return --n * n * n + 1;
   },
-  inOutCube: (n) => {
+  inOutCube: n => {
     n *= 2;
     if (n < 1) return 0.5 * n * n * n;
-    return 0.5 * ((n -= 2 ) * n * n + 2);
+    return 0.5 * ((n -= 2) * n * n + 2);
   },
-  inQuart: (n) => {
+  inQuart: n => {
     return n * n * n * n;
   },
-  outQuart: (n) => {
-    return 1 - (--n * n * n * n);
+  outQuart: n => {
+    return 1 - --n * n * n * n;
   },
-  inOutQuart: (n) => {
+  inOutQuart: n => {
     n *= 2;
     if (n < 1) return 0.5 * n * n * n * n;
     return -0.5 * ((n -= 2) * n * n * n - 2);
   },
-  inQuint: (n) => {
+  inQuint: n => {
     return n * n * n * n * n;
   },
-  outQuint: (n) => {
+  outQuint: n => {
     return --n * n * n * n * n + 1;
   },
-  inOutQuint: (n) => {
+  inOutQuint: n => {
     n *= 2;
     if (n < 1) return 0.5 * n * n * n * n * n;
     return 0.5 * ((n -= 2) * n * n * n * n + 2);
   },
-  inSine: (n) => {
-    return 1 - Math.cos(n * Math.PI / 2 );
+  inSine: n => {
+    return 1 - Math.cos(n * Math.PI / 2);
   },
-  outSine: (n) => {
+  outSine: n => {
     return Math.sin(n * Math.PI / 2);
   },
-  inOutSine: (n) => {
-    return .5 * (1 - Math.cos(Math.PI * n));
+  inOutSine: n => {
+    return 0.5 * (1 - Math.cos(Math.PI * n));
   },
-  inExpo: (n) => {
+  inExpo: n => {
     return 0 == n ? 0 : Math.pow(1024, n - 1);
   },
-  outExpo: (n) => {
+  outExpo: n => {
     return 1 == n ? n : 1 - Math.pow(2, -10 * n);
   },
-  inOutExpo: (n) => {
+  inOutExpo: n => {
     if (0 == n) return 0;
     if (1 == n) return 1;
-    if ((n *= 2) < 1) return .5 * Math.pow(1024, n - 1);
-    return .5 * (-Math.pow(2, -10 * (n - 1)) + 2);
+    if ((n *= 2) < 1) return 0.5 * Math.pow(1024, n - 1);
+    return 0.5 * (-Math.pow(2, -10 * (n - 1)) + 2);
   },
-  inCirc: (n) => {
+  inCirc: n => {
     return 1 - Math.sqrt(1 - n * n);
   },
-  outCirc: (n) => {
-    return Math.sqrt(1 - (--n * n));
+  outCirc: n => {
+    return Math.sqrt(1 - --n * n);
   },
-  inOutCirc: (n) => {
-    n *= 2
+  inOutCirc: n => {
+    n *= 2;
     if (n < 1) return -0.5 * (Math.sqrt(1 - n * n) - 1);
     return 0.5 * (Math.sqrt(1 - (n -= 2) * n) + 1);
   },
-  inBack: (n) => {
+  inBack: n => {
     var s = 1.70158;
-    return n * n * (( s + 1 ) * n - s);
+    return n * n * ((s + 1) * n - s);
   },
-  outBack: (n) => {
+  outBack: n => {
     var s = 1.70158;
     return --n * n * ((s + 1) * n + s) + 1;
   },
-  inOutBack: (n) => {
+  inOutBack: n => {
     var s = 1.70158 * 1.525;
-    if ( ( n *= 2 ) < 1 ) return 0.5 * ( n * n * ( ( s + 1 ) * n - s ) );
-    return 0.5 * ( ( n -= 2 ) * n * ( ( s + 1 ) * n + s ) + 2 );
+    if ((n *= 2) < 1) return 0.5 * (n * n * ((s + 1) * n - s));
+    return 0.5 * ((n -= 2) * n * ((s + 1) * n + s) + 2);
   },
 
-  inElastic: (n) => {
-    var s, a = 0.1, p = 0.4;
-    if ( n === 0 ) return 0;
-    if ( n === 1 ) return 1;
-    if ( !a || a < 1 ) { a = 1; s = p / 4; }
-    else s = p * Math.asin( 1 / a ) / ( 2 * Math.PI );
-    return - ( a * Math.pow( 2, 10 * ( n -= 1 ) ) * Math.sin( ( n - s ) * ( 2 * Math.PI ) / p ) );
+  inElastic: n => {
+    var s,
+      a = 0.1,
+      p = 0.4;
+    if (n === 0) return 0;
+    if (n === 1) return 1;
+    if (!a || a < 1) {
+      a = 1;
+      s = p / 4;
+    } else s = p * Math.asin(1 / a) / (2 * Math.PI);
+    return -(
+      a *
+      Math.pow(2, 10 * (n -= 1)) *
+      Math.sin((n - s) * (2 * Math.PI) / p)
+    );
   },
-  outElastic: (n) => {
-    var s, a = 0.1, p = 0.4;
-    if ( n === 0 ) return 0;
-    if ( n === 1 ) return 1;
-    if ( !a || a < 1 ) { a = 1; s = p / 4; }
-    else s = p * Math.asin( 1 / a ) / ( 2 * Math.PI );
-    return ( a * Math.pow( 2, - 10 * n) * Math.sin( ( n - s ) * ( 2 * Math.PI ) / p ) + 1 );
+  outElastic: n => {
+    var s,
+      a = 0.1,
+      p = 0.4;
+    if (n === 0) return 0;
+    if (n === 1) return 1;
+    if (!a || a < 1) {
+      a = 1;
+      s = p / 4;
+    } else s = p * Math.asin(1 / a) / (2 * Math.PI);
+    return a * Math.pow(2, -10 * n) * Math.sin((n - s) * (2 * Math.PI) / p) + 1;
   },
-  inOutElastic: (n) => {
-    var s, a = 0.1, p = 0.4;
-    if ( n === 0 ) return 0;
-    if ( n === 1 ) return 1;
-    if ( !a || a < 1 ) { a = 1; s = p / 4; }
-    else s = p * Math.asin( 1 / a ) / ( 2 * Math.PI );
-    if ( ( n *= 2 ) < 1 ) return - 0.5 * ( a * Math.pow( 2, 10 * ( n -= 1 ) ) * Math.sin( ( n - s ) * ( 2 * Math.PI ) / p ) );
-    return a * Math.pow( 2, -10 * ( n -= 1 ) ) * Math.sin( ( n - s ) * ( 2 * Math.PI ) / p ) * 0.5 + 1;
+  inOutElastic: n => {
+    var s,
+      a = 0.1,
+      p = 0.4;
+    if (n === 0) return 0;
+    if (n === 1) return 1;
+    if (!a || a < 1) {
+      a = 1;
+      s = p / 4;
+    } else s = p * Math.asin(1 / a) / (2 * Math.PI);
+    if ((n *= 2) < 1)
+      return (
+        -0.5 *
+        (a * Math.pow(2, 10 * (n -= 1)) * Math.sin((n - s) * (2 * Math.PI) / p))
+      );
+    return (
+      a *
+        Math.pow(2, -10 * (n -= 1)) *
+        Math.sin((n - s) * (2 * Math.PI) / p) *
+        0.5 +
+      1
+    );
   }
-}
+};
 // exports.inBounce = function(n){
 //   return 1 - exports.outBounce(1 - n);
 // };
