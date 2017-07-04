@@ -14,9 +14,29 @@ describe('CSS', function() {
     expect(this.el.style.opacity).toBe('0.3');
   });
 
-  it('should set translateY', function() {
+  it('should set translateY with browser prefixes', function() {
     css.set(this.el, { translateY: {val: 10, unit: 'px'}});
     expect(this.el.style.transform).toBe('translateY(10px)');
+    expect(this.el.style.WebkitTransform).toBe('translateY(10px)');
+    expect(this.el.style.MozTransform).toBe('translateY(10px)');
+    expect(this.el.style.OTransform).toBe('translateY(10px)');
+    expect(this.el.style.msTransform).toBe('translateY(10px)');
+  });
+
+  it('should clear transform with browser prefixes', function() {
+    css.set(this.el, { translateY: {val: 10, unit: 'px'}});
+    expect(this.el.style.transform).toBe('translateY(10px)');
+    expect(this.el.style.WebkitTransform).toBe('translateY(10px)');
+    expect(this.el.style.MozTransform).toBe('translateY(10px)');
+    expect(this.el.style.OTransform).toBe('translateY(10px)');
+    expect(this.el.style.msTransform).toBe('translateY(10px)');
+
+    css.clear(this.el);
+    expect(this.el.style.transform).toBe(null);
+    expect(this.el.style.WebkitTransform).toBe(null); // ?
+    expect(this.el.style.MozTransform).toBe(null);
+    expect(this.el.style.OTransform).toBe(null);
+    expect(this.el.style.msTransform).toBe(null);
   });
 
   it('should set translateY and rotate', function() {

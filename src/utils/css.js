@@ -1,35 +1,39 @@
 module.exports = (() => {
-  const transformNames = [
-    'matrix',
-    'matrix3d',
-    'translate',
-    'translate3d',
-    'translateX',
-    'translateY',
-    'translateZ',
-    'scale',
-    'scale3d',
-    'scaleX',
-    'scaleY',
-    'scaleZ',
-    'rotate',
-    'rotate3d',
-    'rotateX',
-    'rotateY',
-    'rotateZ',
-    'skew',
-    'skewX',
-    'skewY'
-  ];
+  const TRANSFORMS = [
+      'matrix',
+      'matrix3d',
+      'translate',
+      'translate3d',
+      'translateX',
+      'translateY',
+      'translateZ',
+      'scale',
+      'scale3d',
+      'scaleX',
+      'scaleY',
+      'scaleZ',
+      'rotate',
+      'rotate3d',
+      'rotateX',
+      'rotateY',
+      'rotateZ',
+      'skew',
+      'skewX',
+      'skewY'
+    ],
+    PREFIXES = ['Moz', 'Webkit', 'ms', 'O'];
 
   const css = {
     set: (el, style, log = false) => {
       // Handle existing transform!
       let transformString = css.generateTransformString(style);
       el.style.transform = transformString;
+      PREFIXES.forEach(p => {
+        el.style[p + 'Transform'] = transformString;
+      });
 
       for (const key in style) {
-        if (transformNames.indexOf(key) > -1) continue;
+        if (TRANSFORMS.indexOf(key) > -1) continue;
         if (log) console.log(style[key], css.round(style[key]));
         el.style[key] = css.round(style[key]) + (style[key].unit || '');
       }
@@ -37,8 +41,12 @@ module.exports = (() => {
 
     clear: (el, style) => {
       el.style.transform = null;
+      PREFIXES.forEach(p => {
+        el.style[p + 'Transform'] = null;
+      });
+
       for (const key in style) {
-        if (transformNames.indexOf(key) > -1) continue;
+        if (TRANSFORMS.indexOf(key) > -1) continue;
         el.style[key] = null;
       }
     },
@@ -46,7 +54,7 @@ module.exports = (() => {
     generateTransformString: style => {
       let transformString = '';
       for (const key in style) {
-        if (transformNames.indexOf(key) == -1) continue;
+        if (TRANSFORMS.indexOf(key) == -1) continue;
         transformString +=
           ' ' + key + '(' + css.round(style[key]) + style[key].unit + ')';
       }
