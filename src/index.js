@@ -6,7 +6,8 @@ const assign = require('object-assign'),
   size = require('./utils/size'),
   common = require('./utils/common'),
   loop = require('./loop'),
-  dom = require('./utils/dom');
+  dom = require('./utils/dom'),
+  css = require('./utils/css');
 
 require('./utils/listeners');
 
@@ -14,13 +15,24 @@ const us = {
   slideTo() {
     let { state, container, options } = common.getArguments(arguments),
       next = state,
-      current = states.current(container);
+      current = states.current(container),
+      currentAnimationOptions,
+      nextAnimationOptions,
+      containerAnimationOptions;
 
     if (next == current) return;
     if (next == null) return;
 
     let currentHeight = 0,
       nextHeight = size.height(next);
+
+    if (!css.support3d) {
+      if (current) {
+        css.set(current, { display: { val: 'none' } });
+      }
+      css.set(next, { display: { val: 'block' } });
+      return;
+    }
 
     if (current) {
       currentHeight = size.height(current);
@@ -46,46 +58,40 @@ const us = {
     });
 
     if (current) {
-      us.a(
-        current,
-        common.getOptions(
-          {
-            action: 'hide',
-            el: current,
-            container: container
-          },
-          options
-        )
-      );
+      currentAnimationOptions = common.getOptions({
+        action: 'hide',
+        el: current,
+        container: container,
+        options: options
+      });
     }
+    nextAnimationOptions = common.getOptions({
+      action: 'show',
+      el: next,
+      container: container,
+      options: options
+    });
+    containerAnimationOptions = common.getOptions({
+      action: 'container',
+      el: container,
+      container: container,
+      options: options.container
+    });
 
-    us.a(
-      next,
-      common.getOptions(
-        {
-          action: 'show',
-          el: next,
-          container: container
-        },
-        options
-      )
-    );
-
-    us.a(
-      container,
-      common.getOptions(
-        {
-          action: 'container',
-          el: container,
-          container: container
-        },
-        options.container
-      )
-    );
+    if (current) {
+      us.a(current, currentAnimationOptions);
+    }
+    us.a(next, nextAnimationOptions);
+    us.a(container, containerAnimationOptions);
   },
 
   show(el, options = {}) {
     if (!states.isHidden(el)) return;
+
+    if (!css.support3d) {
+      css.set(el, { display: { val: 'block' } });
+      return;
+    }
 
     options.show = options.show || {};
     options.container = options.container || {};
@@ -93,7 +99,9 @@ const us = {
 
     let container = el.parentNode,
       currentHeight = 0,
-      nextHeight = size.height(el); // TODO: INCLUDE MARGINS! OK SINCE WRAP
+      nextHeight = size.height(el), // TODO: INCLUDE MARGINS! OK SINCE WRAP
+      containerAnimationOptions,
+      elAnimationOptions;
 
     if (options.overflow !== true) container.style.overflow = 'hidden';
 
@@ -107,33 +115,30 @@ const us = {
       wait: 0 //common.calculateContainerWait(currentOptions, nextOptions, containerOptions)
     });
 
-    us.a(
+    elAnimationOptions = common.getOptions({
+      action: 'show',
       el,
-      common.getOptions(
-        {
-          action: 'show',
-          el,
-          container
-        },
-        options
-      )
-    );
-
-    us.a(
       container,
-      common.getOptions(
-        {
-          action: 'container',
-          el: container,
-          container: container
-        },
-        options
-      )
-    );
+      options
+    });
+    containerAnimationOptions = common.getOptions({
+      action: 'container',
+      el: container,
+      container: container,
+      options
+    });
+
+    us.a(el, elAnimationOptions);
+    us.a(container, containerAnimationOptions);
   },
 
   hide(el, options = {}) {
     if (states.isHidden(el)) return;
+
+    if (!css.support3d) {
+      css.set(el, { display: { val: 'none' } });
+      return;
+    }
 
     options.hide = options.hide || {};
     options.container = options.container || {};
@@ -141,7 +146,9 @@ const us = {
 
     let container = el.parentNode,
       currentHeight = size.height(el),
-      nextHeight = 0;
+      nextHeight = 0,
+      elAnimationOptions,
+      containerAnimationOptions;
 
     if (options.overflow !== true) container.style.overflow = 'hidden';
 
@@ -161,29 +168,21 @@ const us = {
       wait: 0 // currentOptions.duration + currentOptions.delay
     });
 
-    us.a(
-      el,
-      common.getOptions(
-        {
-          action: 'hide',
-          el: el,
-          container: container
-        },
-        options
-      )
-    );
-
-    us.a(
+    elAnimationOptions = common.getOptions({
+      action: 'hide',
+      el: el,
       container,
-      common.getOptions(
-        {
-          action: 'container',
-          el: container,
-          container: container
-        },
-        options
-      )
-    );
+      options
+    });
+    containerAnimationOptions = common.getOptions({
+      action: 'container',
+      el: container,
+      container,
+      options
+    });
+
+    us.a(el, elAnimationOptions);
+    us.a(container, containerAnimationOptions);
   },
 
   toggle(nameOrEl, options) {

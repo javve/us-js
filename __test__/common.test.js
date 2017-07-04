@@ -192,13 +192,13 @@ describe('Common', function() {
       this.state.setAttribute('data-us-duration', 'duration-1');
       this.state.setAttribute('data-us-delay', 'delay-1');
       this.state.setAttribute('data-us-easing', 'easing-1');
-      let options = common.getOptions({action: 'hide', el: this.state, container: this.container}, {
+      let options = common.getOptions({action: 'hide', el: this.state, container: this.container, options: {
         duration: 'duration-2',
         delay: 'delay-2',
         hide: {
           duration: 'duration-3',
         }
-      });
+      }});
 
       expect(options).toEqual({
         duration: 'duration-3',

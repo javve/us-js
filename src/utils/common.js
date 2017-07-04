@@ -35,7 +35,7 @@ module.exports = (() => {
         container.getAttribute('data-us-' + val + '')
       );
     },
-    getOptions: ({ action, el, container }, options = {}) => {
+    getOptions: ({ action, el, container, options = {} }) => {
       options[action] = options[action] || {};
       let style =
         options[action].style ||

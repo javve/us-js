@@ -21,16 +21,23 @@ module.exports = (() => {
       'skewX',
       'skewY'
     ],
-    PREFIXES = ['Moz', 'Webkit', 'ms', 'O'];
+    PREFIXES = {
+      WebkitTransform: '-webkit-transform',
+      OTransform: '-o-transform',
+      msTransform: '-ms-transform',
+      MozTransform: '-moz-transform',
+      transform: 'transform'
+    };
 
   const css = {
     set: (el, style, log = false) => {
       // Handle existing transform!
       let transformString = css.generateTransformString(style);
-      el.style.transform = transformString;
-      PREFIXES.forEach(p => {
-        el.style[p + 'Transform'] = transformString;
-      });
+      for (var t in PREFIXES) {
+        if (PREFIXES.hasOwnProperty(t)) {
+          el.style[t] = transformString;
+        }
+      }
 
       for (const key in style) {
         if (TRANSFORMS.indexOf(key) > -1) continue;
@@ -40,10 +47,11 @@ module.exports = (() => {
     },
 
     clear: (el, style) => {
-      el.style.transform = null;
-      PREFIXES.forEach(p => {
-        el.style[p + 'Transform'] = null;
-      });
+      for (var t in PREFIXES) {
+        if (PREFIXES.hasOwnProperty(t)) {
+          el.style[t] = null;
+        }
+      }
 
       for (const key in style) {
         if (TRANSFORMS.indexOf(key) > -1) continue;
@@ -67,7 +75,9 @@ module.exports = (() => {
       if (transformString.length == 0) return null;
       let results = {};
       let transforms = transformString.replace(/\)/g, '))').split(/\) /gi);
-      for (let transform of transforms) {
+      for (let i = 0; i < transforms.lenght; i++) {
+        let transform = transforms[i];
+        //for (let transform of transforms) {
         let transformParts = nameValue.exec(transform),
           transformName = transformParts[1],
           transformValue = transformParts[2],
@@ -109,7 +119,24 @@ module.exports = (() => {
       } else {
         return Math.round(val * 100) / 100;
       }
-    }
+    },
+    support3d: (function() {
+      let el = document.createElement('p'),
+        has3d;
+
+      document.body.insertBefore(el, null);
+      for (var t in PREFIXES) {
+        if (PREFIXES.hasOwnProperty(t)) {
+          if (el.style[t] !== undefined) {
+            el.style[t] = 'translate3d(1px,1px,1px)';
+            has3d = window.getComputedStyle(el).getPropertyValue(PREFIXES[t]);
+          }
+        }
+      }
+      document.body.removeChild(el);
+      return has3d !== undefined && has3d.length > 0 && has3d !== 'none';
+    })()
   };
+
   return css;
 })();
