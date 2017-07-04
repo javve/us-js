@@ -11,9 +11,12 @@ module.exports = (() => {
     current(container) {
       let all = states.all(container);
       for (let state of all) {
-        if (state.classList.contains('state-show')) {
+        if (!states.isHidden(state)) {
           return state;
         }
+        // if (state.classList.contains('state-show')) {
+        //   return state;
+        // }
       }
       if (all.length && !states.isHidden(all[0])) {
         return all[0];
@@ -34,10 +37,10 @@ module.exports = (() => {
     },
     show(state) {
       //css.clear(state, styles.hide);
-      state.classList.add('state-show');
+      //state.classList.add('state-show');
     },
     hide(state) {
-      state.classList.remove('state-show');
+      //state.classList.remove('state-show');
       //css.clear(state, s.styles.previous);
       //css.clear(state, s.styles.show);
       css.set(state, styles.hide);
