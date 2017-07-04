@@ -55,7 +55,7 @@ module.exports = (() => {
 
       for (const key in style) {
         if (TRANSFORMS.indexOf(key) > -1) continue;
-        el.style[key] = null;
+        el.style.removeProperty(key);
       }
     },
 
@@ -75,7 +75,7 @@ module.exports = (() => {
       if (transformString.length == 0) return null;
       let results = {};
       let transforms = transformString.replace(/\)/g, '))').split(/\) /gi);
-      for (let i = 0; i < transforms.lenght; i++) {
+      for (let i = 0; i < transforms.length; i++) {
         let transform = transforms[i];
         //for (let transform of transforms) {
         let transformParts = nameValue.exec(transform),

@@ -11,7 +11,8 @@ module.exports = (() => {
       let triggers = (str || '').replace(/ /g, '').split(','),
         results = [];
 
-      for (let trigger of triggers) {
+      for (let i = 0; i < triggers.length; i++) {
+        let trigger = triggers[i];
         let triggerParts = trigger.split('.');
         if (triggerParts.length == 1) {
           results.push({

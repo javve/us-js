@@ -10,7 +10,8 @@ module.exports = (() => {
   const states = {
     current(container) {
       let all = states.all(container);
-      for (let state of all) {
+      for (let i = 0; i < all.length; i++) {
+        let state = all[i];
         if (!states.isHidden(state)) {
           return state;
         }
@@ -25,7 +26,9 @@ module.exports = (() => {
       }
     },
     get(name, container) {
-      for (let state of states.all(container)) {
+      let all = states.all(container);
+      for (let i = 0; i < all.length; i++) {
+        let state = all[i];
         if (state.getAttribute('data-us-name') == name) {
           return state;
         }
@@ -51,7 +54,8 @@ module.exports = (() => {
     all(container) {
       let nodes = container.childNodes,
         states = [];
-      for (let node of nodes) {
+      for (let i = 0; i < nodes.length; i++) {
+        let node = nodes[i];
         if (node.data === undefined) {
           states.push(node);
         }

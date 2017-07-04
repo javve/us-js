@@ -15,7 +15,9 @@ module.exports = (() => {
       } else {
         loop._animating = false;
       }
-      for (let animation of loop._animations) {
+
+      for (let i = 0; i < loop._animations.length; i++) {
+        let animation = loop._animations[i];
         let running = animation.tick();
         if (!running) {
           loop._completedAnimations.push(animation);

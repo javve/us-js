@@ -3,7 +3,8 @@ module.exports = (() => {
     all() {
       let states = document.querySelectorAll('[data-us-name]'),
         allContainers = [];
-      for (let state of states) {
+      for (let i = 0; i < states.length; i++) {
+        let state = states[i];
         let stateContainer = state.parentNode;
         if (allContainers.indexOf(stateContainer) == -1) {
           allContainers.push(stateContainer);
